@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | C-Suite</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .login-page {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5%;
+            background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.1), transparent),
+                radial-gradient(circle at bottom left, rgba(251, 191, 36, 0.05), transparent);
+        }
+
+        .login-card {
+            background: var(--surface);
+            padding: 3.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+        }
+
+        .login-card h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--text-white);
+        }
+
+        .error-msg {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .login-card .logo {
+            text-align: center;
+            margin-bottom: 1rem;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-page">
+        <div class="login-card fade-in">
+            <div class="logo">C-Suite</div>
+            <h1>Staff Login</h1>
+            <div id="login-error" class="error-msg"></div>
+            <form id="admin-login-form-page">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" required placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required placeholder="Enter password">
+                </div>
+                <button type="submit" class="btn" style="width: 100%; margin-top: 1.5rem; padding: 1.2rem;">Secure
+                    Login</button>
+            </form>
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="index.html" style="color: var(--text-gray); text-decoration: none; font-size: 0.9rem;">← Back
+                    to Website</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script>
+        gsap.to(".fade-in", { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: 0.2 });
+
+        const API_BASE = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
+            ? 'http://127.0.0.1:5000/api'
+            : 'https://c-suite-backend.onrender.com/api'; // Replace with your actual Render URL if different
+        const loginForm = document.getElementById('admin-login-form-page');
+        const errorEl = document.getElementById('login-error');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorEl.style.display = 'none';
+
+            const data = Object.fromEntries(new FormData(loginForm));
+
+            try {
+                const res = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await res.json();
+                if (res.ok) {
+                    localStorage.setItem('token', result.token);
+                    localStorage.setItem('admin_user', result.username);
+                    window.location.href = 'admin.html';
+                } else {
+                    errorEl.innerText = result.message || 'Access Denied';
+                    errorEl.style.display = 'block';
+                }
+            } catch (err) {
+                errorEl.innerText = 'Unable to connect to security server.';
+                errorEl.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+
+</html>

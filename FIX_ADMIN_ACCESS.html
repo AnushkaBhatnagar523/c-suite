@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C-Suite | Create Production Admin</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #1e293b;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #334155;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #fbbf24;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: #fbbf24;
+            color: #0f172a;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background: #f59e0b;
+        }
+
+        #message {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 6px;
+            display: none;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .success {
+            background: #065f46;
+            color: #34d399;
+        }
+
+        .error {
+            background: #7f1d1d;
+            color: #fca5a5;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Create Admin Account</h1>
+        <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 1.5rem; text-align: center;">Use this to set up your
+            account on your LIVE website.</p>
+
+        <div class="form-group">
+            <label>Live Backend URL</label>
+            <input type="text" id="apiUrl" placeholder="https://c-suite-backend.onrender.com">
+        </div>
+        <div class="form-group">
+            <label>New Admin Username</label>
+            <input type="text" id="username" placeholder="admin@gmail.com">
+        </div>
+        <div class="form-group">
+            <label>New Admin Password</label>
+            <input type="password" id="password" placeholder="Choose a strong password">
+        </div>
+
+        <button onclick="createAdmin()">Create Admin Account</button>
+
+        <div id="message"></div>
+    </div>
+
+    <script>
+        async function createAdmin() {
+            const url = document.getElementById('apiUrl').value.trim();
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            const msgEl = document.getElementById('message');
+
+            if (!url || !user || !pass) {
+                alert("Please fill in all fields");
+                return;
+            }
+
+            // Remove trailing slash if exists
+            const cleanUrl = url.endsWith('/') ? url.slice(0, -1) : url;
+
+            msgEl.style.display = 'block';
+            msgEl.className = '';
+            msgEl.innerText = 'Creating account...';
+
+            try {
+                const response = await fetch(`${cleanUrl}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    msgEl.className = 'success';
+                    msgEl.innerText = '✅ Success! Admin account created. You can now go to your website and log in.';
+                } else {
+                    msgEl.className = 'error';
+                    msgEl.innerText = '❌ Error: ' + (data.message || 'Failed to create account');
+                }
+            } catch (error) {
+                msgEl.className = 'error';
+                msgEl.innerText = '❌ Connection Failed. Check your Backend URL.';
+            }
+        }
+    </script>
+</body>
+
+</html>

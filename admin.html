@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Management Dashboard | C-Suite</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .admin-dashboard {
+            padding-top: 100px;
+            min-height: 100vh;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-white);
+        }
+
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.1);
+            color: #fca5a5;
+            border: 1px solid #ef4444;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #ef4444;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">C-Suite Admin</div>
+        <nav>
+            <a href="index.html">Live Site</a>
+            <div class="user-profile">
+                <span id="admin-name">Admin</span>
+                <button onclick="logoutAdmin()" class="logout-btn">Logout</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="admin-dashboard">
+        <section id="admin-portal" style="padding: 50px 5%;">
+            <h1 style="font-size: 3rem; margin-bottom: 3rem; text-align: center;">Management Dashboard</h1>
+
+            <div class="manage-tabs">
+                <button type="button" class="manage-tab-btn active" onclick="switchManageTab('blogs')">Blogs</button>
+                <button type="button" class="manage-tab-btn" onclick="switchManageTab('circulars')">Circulars</button>
+                <button type="button" class="manage-tab-btn" onclick="switchManageTab('services')">Services</button>
+            </div>
+
+            <!-- Blogs Management -->
+            <div id="manage-blogs" class="manage-content active">
+                <h2 style="font-size: 2rem; margin-bottom: 2rem; text-align: center; color: var(--accent-gold);">Post
+                    Blogs</h2>
+                <div id="blog-msg" class="manage-message"></div>
+                <form id="manage-blog-form">
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" name="title" required placeholder="Blog Title">
+                    </div>
+                    <div class="form-group">
+                        <label>Content * (HTML/Markdown supported)</label>
+                        <textarea name="content" required placeholder="Write blog content here..." rows="8"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Featured Image</label>
+                        <input type="file" name="blogImage" accept="image/*"
+                            style="padding: 0.5rem; border: 1px dashed var(--accent-gold);">
+                        <p style="font-size: 0.8rem; color: var(--text-gray); margin-top: 0.3rem;">Upload a JPG/PNG
+                            thumbnail for the blog.</p>
+                    </div>
+                    <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <label>Category</label>
+                            <input type="text" name="category" placeholder="e.g., Taxation">
+                        </div>
+                        <div>
+                            <label>Author</label>
+                            <input type="text" name="author" placeholder="e.g., CA Sharma">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select name="status">
+                            <option value="published">Published</option>
+                            <option value="draft">Draft</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%;">Post Blog</button>
+                </form>
+                <div id="manage-blogs-list" class="items-list-container"></div>
+            </div>
+
+            <!-- Circulars Management -->
+            <div id="manage-circulars" class="manage-content">
+                <h2 style="font-size: 2rem; margin-bottom: 2rem; text-align: center; color: var(--accent-gold);">Post
+                    Circulars</h2>
+                <div id="circular-msg" class="manage-message"></div>
+                <form id="manage-circular-form">
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" name="title" required placeholder="Circular Title">
+                    </div>
+                    <div class="form-group">
+                        <label>Summary</label>
+                        <textarea name="summary" placeholder="Brief summary of the circular..." rows="4"></textarea>
+                    </div>
+                    <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <label>Authority</label>
+                            <input type="text" name="authority" placeholder="e.g., CBDT">
+                        </div>
+                        <div>
+                            <label>Reference No.</label>
+                            <input type="text" name="reference_no" placeholder="e.g., 20/2026">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>PDF URL / Path</label>
+                        <input type="text" name="pdf_url" placeholder="/uploads/circular.pdf">
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%;">Post Circular</button>
+                </form>
+                <div id="manage-circulars-list" class="items-list-container"></div>
+            </div>
+
+            <!-- Services Management -->
+            <div id="manage-services" class="manage-content">
+                <h2 style="font-size: 2rem; margin-bottom: 2rem; text-align: center; color: var(--accent-gold);">View
+                    Services</h2>
+                <div id="service-msg" class="manage-message"></div>
+                <p style="color: var(--text-gray); margin-bottom: 2rem; text-align: center;">Currently in read-only mode
+                    for safety. Contact system administrator for service structure changes.</p>
+                <div id="manage-services-list" class="items-list-container"></div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        // Check authentication
+        if (!localStorage.getItem('token')) {
+            window.location.href = 'login.html';
+        }
+        document.getElementById('admin-name').innerText = localStorage.getItem('admin_user') || 'Admin';
+
+        function logoutAdmin() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('admin_user');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+
+</html>

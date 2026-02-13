@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USA Services | C-Suite</title>
+    <meta name="description"
+        content="Professional Accounting, Taxation and Advisory services in the USA. Excellence in compliance and financial strategy.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">C-Suite</div>
+        <nav>
+            <a href="index.html">Home</a>
+
+            <div class="nav-dropdown">
+                <a href="#" class="active">USA Services ▾</a>
+                <div class="nav-dropdown-content">
+                    <a href="india.html">India</a>
+                    <a href="uae.html">UAE</a>
+                    <a href="usa.html">USA</a>
+                </div>
+            </div>
+
+            <a href="blogs.html">Blog</a>
+            <a href="circulars.html">Circulars</a>
+            <a href="index.html#contact">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="services-page" style="padding-top: 120px;">
+            <h1 class="fade-in">USA Services</h1>
+            <p class="fade-in"
+                style="text-align: center; max-width: 800px; margin: 0 auto 4rem; color: var(--text-gray);">
+                Strategic financial and legal solutions for navigating the US market.
+            </p>
+
+            <div class="services-grid fade-in">
+                <!-- 1. Business Formation & Registration -->
+                <div class="service-card" onclick="toggleDropdown('us-formation')">
+                    <h3>Business Formation & Registration</h3>
+                    <p>Comprehensive setup for LLC, C-Corp, S-Corp and more.</p>
+                    <div class="dropdown-container" id="us-formation">
+                        <button class="sub-service-btn" onclick="showDetails('LLC Registration', event)">LLC
+                            Registration</button>
+                        <button class="sub-service-btn" onclick="showDetails('C-Corp Registration', event)">C-Corp
+                            Registration</button>
+                        <button class="sub-service-btn" onclick="showDetails('S-Corp Registration', event)">S-Corp
+                            Registration</button>
+                        <button class="sub-service-btn" onclick="showDetails('EIN Application', event)">EIN
+                            Application</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Registered Agent Assistance', event)">Registered Agent
+                            Assistance</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Operating Agreement / Bylaws', event)">Operating Agreement /
+                            Bylaws</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Foreign Company Registration (US Expansion)', event)">Foreign Company
+                            Registration</button>
+                        <button class="sub-service-btn" onclick="showDetails('Startup Advisory', event)">Startup
+                            Advisory</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Post-Incorporation Compliance Setup', event)">Post-Incorporation
+                            Compliance</button>
+                    </div>
+                </div>
+
+                <!-- 2. Accounting & Bookkeeping -->
+                <div class="service-card" onclick="toggleDropdown('us-accounting')">
+                    <h3>Accounting & Bookkeeping</h3>
+                    <p>Professional financial record management and reporting.</p>
+                    <div class="dropdown-container" id="us-accounting">
+                        <button class="sub-service-btn" onclick="showDetails('Monthly Bookkeeping', event)">Monthly
+                            Bookkeeping</button>
+                        <button class="sub-service-btn" onclick="showDetails('Cloud Accounting Setup', event)">Cloud
+                            Accounting Setup</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Accounts Payable & Receivable', event)">Accounts Payable &
+                            Receivable</button>
+                        <button class="sub-service-btn" onclick="showDetails('Bank Reconciliation', event)">Bank
+                            Reconciliation</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Financial Statements Preparation', event)">Financial Statements
+                            Preparation</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Catch-Up & Clean-Up Bookkeeping', event)">Catch-Up & Clean-Up</button>
+                        <button class="sub-service-btn" onclick="showDetails('Virtual CFO Services', event)">Virtual CFO
+                            Services</button>
+                        <button class="sub-service-btn" onclick="showDetails('Management Reports', event)">Management
+                            Reports</button>
+                    </div>
+                </div>
+
+                <!-- 3. Taxation Services -->
+                <div class="service-card" onclick="toggleDropdown('us-tax')">
+                    <h3>Taxation Services</h3>
+                    <p>Federal, state, and specialized tax filing solutions.</p>
+                    <div class="dropdown-container" id="us-tax">
+                        <button class="sub-service-btn" onclick="showDetails('Federal Tax Returns', event)">Federal Tax
+                            Returns</button>
+                        <button class="sub-service-btn" onclick="showDetails('State Tax Returns', event)">State Tax
+                            Returns</button>
+                        <button class="sub-service-btn" onclick="showDetails('LLC & Corporate Tax Filing', event)">LLC &
+                            Corporate Tax Filing</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Individual Tax Returns (Founders / NRIs)', event)">Individual Tax
+                            Returns</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Sales Tax Registration & Filing', event)">Sales Tax Registration &
+                            Filing</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('IRS Notices & Resolution Support', event)">IRS Notices &
+                            Resolution</button>
+                        <button class="sub-service-btn" onclick="showDetails('ITIN Application', event)">ITIN
+                            Application</button>
+                    </div>
+                </div>
+
+                <!-- 4. Tax Planning & Advisory -->
+                <div class="service-card" onclick="toggleDropdown('us-tax-planning')">
+                    <h3>Tax Planning & Advisory</h3>
+                    <p>Strategic tax optimization and cross-border planning.</p>
+                    <div class="dropdown-container" id="us-tax-planning">
+                        <button class="sub-service-btn" onclick="showDetails('Tax Optimization Strategies', event)">Tax
+                            Optimization Strategies</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Cross-Border Tax Planning', event)">Cross-Border Tax Planning</button>
+                        <button class="sub-service-btn" onclick="showDetails('NRI / Expat Tax Advisory', event)">NRI /
+                            Expat Tax Advisory</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Business Structuring for Tax Efficiency', event)">Business
+                            Structuring</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Profit Repatriation Planning', event)">Profit Repatriation
+                            Planning</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Compliance Risk Assessment', event)">Compliance Risk
+                            Assessment</button>
+                    </div>
+                </div>
+
+                <!-- 5. Licenses & Regulatory Compliance -->
+                <div class="service-card" onclick="toggleDropdown('us-compliance')">
+                    <h3>Licenses & Regulatory Compliance</h3>
+                    <p>Comprehensive licensing and reporting management.</p>
+                    <div class="dropdown-container" id="us-compliance">
+                        <button class="sub-service-btn" onclick="showDetails('Business Licenses', event)">Business
+                            Licenses</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Industry-Specific Permits', event)">Industry-Specific Permits</button>
+                        <button class="sub-service-btn" onclick="showDetails('Annual Reports Filing', event)">Annual
+                            Reports Filing</button>
+                        <button class="sub-service-btn" onclick="showDetails('BOI Reporting', event)">BOI
+                            Reporting</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Compliance Calendar Management', event)">Compliance Calendar</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Registered Agent Renewals', event)">Registered Agent Renewals</button>
+                    </div>
+                </div>
+
+                <!-- 6. Transfer Pricing & International Structuring -->
+                <div class="service-card" onclick="toggleDropdown('us-international')">
+                    <h3>Transfer Pricing & International Structuring</h3>
+                    <p>Global structuring and intercompany transaction support.</p>
+                    <div class="dropdown-container" id="us-international">
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Transfer Pricing Documentation', event)">Transfer Pricing
+                            Documentation</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Arm’s Length Pricing Advisory', event)">Arm’s Length Pricing</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Intercompany Agreements', event)">Intercompany Agreements</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Cross-Border Structuring', event)">Cross-Border Structuring</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Related Party Transactions Support', event)">Related Party
+                            Transactions</button>
+                    </div>
+                </div>
+
+                <!-- 8. Intellectual Property Services -->
+                <div class="service-card" onclick="toggleDropdown('us-ip')">
+                    <h3>Intellectual Property Services</h3>
+                    <p>Trademark registration and brand protection advisory.</p>
+                    <div class="dropdown-container" id="us-ip">
+                        <button class="sub-service-btn" onclick="showDetails('Trademark Filing', event)">Trademark
+                            Filing</button>
+                        <button class="sub-service-btn" onclick="showDetails('Trademark Monitoring', event)">Trademark
+                            Monitoring</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Responding to USPTO Objections', event)">USPTO Objections
+                            Support</button>
+                        <button class="sub-service-btn" onclick="showDetails('Brand Protection Advisory', event)">Brand
+                            Protection Advisory</button>
+                    </div>
+                </div>
+
+                <!-- 9. Corporate Legal & Secretarial -->
+                <div class="service-card" onclick="toggleDropdown('us-legal-secretarial')">
+                    <h3>Corporate Legal & Secretarial</h3>
+                    <p>Share management, resolutions, and board support.</p>
+                    <div class="dropdown-container" id="us-legal-secretarial">
+                        <button class="sub-service-btn" onclick="showDetails('Share Issuance', event)">Share
+                            Issuance</button>
+                        <button class="sub-service-btn" onclick="showDetails('Cap Table Management', event)">Cap Table
+                            Management</button>
+                        <button class="sub-service-btn" onclick="showDetails('Board Resolutions', event)">Board
+                            Resolutions</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Shareholder Agreements', event)">Shareholder Agreements</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Compliance Documentation', event)">Compliance Documentation</button>
+                    </div>
+                </div>
+
+                <!-- 10. Advisory & Consulting -->
+                <div class="service-card" onclick="toggleDropdown('us-advisory')">
+                    <h3>Advisory & Consulting</h3>
+                    <p>Strategic growth and India-USA business consulting.</p>
+                    <div class="dropdown-container" id="us-advisory">
+                        <button class="sub-service-btn" onclick="showDetails('Startup Consulting', event)">Startup
+                            Consulting</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Business Expansion Advisory', event)">Business Expansion
+                            Advisory</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('India–USA Business Setup', event)">India–USA Business Setup</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Financial Due Diligence', event)">Financial Due Diligence</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Compliance Health Check', event)">Compliance Health Check</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="details-box fade-in" id="detailsBox">
+                <h3 id="detailsTitle">Select a service</h3>
+                <p id="detailsText">Detailed descriptions and scope of work will appear here when you select a service
+                    from the options above.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer
+        style="padding: 80px 5% 40px; border-top: 1px solid var(--glass-border); background: var(--surface); color: var(--text-gray);">
+        <div style="text-align: center;">
+            <p>&copy; 2026 C-Suite Advisory. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

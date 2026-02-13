@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Details | C-Suite</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .service-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 5%;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            color: var(--accent-gold);
+            font-size: 0.9rem;
+        }
+
+        .sub-services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .sub-service-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 25px;
+            border-radius: 12px;
+            transition: 0.3s;
+        }
+
+        .sub-service-card:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-5px);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--accent-gold);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">C-Suite</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <div class="nav-dropdown">
+                <a href="#" class="active">Services ▾</a>
+                <div class="nav-dropdown-content">
+                    <a href="india.html">India</a>
+                    <a href="uae.html">UAE</a>
+                    <a href="usa.html">USA</a>
+                </div>
+            </div>
+            <a href="blogs.html">Blog</a>
+            <a href="circulars.html">Circulars</a>
+            <a href="index.html#contact">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="services-page" style="padding-top: 120px;">
+            <div id="service-container" class="service-content">
+                <div style="text-align: center; padding: 100px 0;">
+                    <p style="color: var(--text-gray);">Loading service details...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer
+        style="padding: 80px 5% 40px; border-top: 1px solid var(--glass-border); background: var(--surface); color: var(--text-gray);">
+        <div style="text-align: center;">
+            <p>&copy; 2026 C-Suite Advisory. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script>
+        async function loadService() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const slug = urlParams.get('slug');
+            const container = document.getElementById('service-container');
+
+            if (!slug) {
+                container.innerHTML = '<h1>Service not found</h1><a href="index.html" class="btn">Back to Home</a>';
+                return;
+            }
+
+            const isLocal = window.location.hostname === '127.0.0.1' ||
+                window.location.hostname === 'localhost' ||
+                window.location.protocol === 'file:';
+            const API_BASE = isLocal ? 'http://127.0.0.1:5000' : 'https://c-suite-backend.onrender.com';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/services/${slug}`);
+                if (!res.ok) throw new Error('Service not found');
+                const service = await res.json();
+
+                // Update Page Title and Meta
+                document.title = `${service.service_name} | C-Suite`;
+                if (service.meta_description) {
+                    let meta = document.querySelector('meta[name="description"]');
+                    if (!meta) {
+                        meta = document.createElement('meta');
+                        meta.name = "description";
+                        document.head.appendChild(meta);
+                    }
+                    meta.content = service.meta_description;
+                }
+
+                let subServicesHtml = '';
+                if (service.sub_services) {
+                    try {
+                        const subs = JSON.parse(service.sub_services);
+                        subServicesHtml = `
+                            <div class="sub-services-grid">
+                                ${subs.map(s => `
+                                    <div class="sub-service-card fade-in">
+                                        <h4 style="color: var(--accent-gold); margin-bottom: 10px;">${s.name}</h4>
+                                        <p style="font-size: 0.95rem; line-height: 1.6;">${s.description}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    } catch (e) { console.error("Error parsing sub-services", e); }
+                }
+
+                container.innerHTML = `
+                    <a href="javascript:history.back()" class="back-link">← Back</a>
+                    <h1 class="fade-in" style="font-size: 2.8rem; margin-bottom: 1rem;">${service.service_name}</h1>
+                    <div class="meta-info fade-in">
+                        <span>Applicable Acts: ${service.applicable_acts || 'N/A'}</span>
+                    </div>
+                    <div class="fade-in" style="font-size: 1.1rem; line-height: 1.8; color: var(--text-gray); margin-bottom: 30px;">
+                        ${service.description || ''}
+                    </div>
+                    ${subServicesHtml}
+                    <div style="margin-top: 50px;" class="fade-in">
+                        <a href="index.html#contact" class="btn">Enquire About This Service</a>
+                    </div>
+                `;
+
+                // GSAP Animations
+                gsap.fromTo(".fade-in",
+                    { opacity: 0, y: 20 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.6,
+                        stagger: 0.1,
+                        ease: "power2.out"
+                    }
+                );
+
+            } catch (err) {
+                container.innerHTML = '<h1>Service not found</h1><a href="index.html" class="btn">Back to Home</a>';
+            }
+        }
+        loadService();
+    </script>
+</body>
+
+</html>

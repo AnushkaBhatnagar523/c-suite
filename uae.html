@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UAE Services | C-Suite</title>
+    <meta name="description"
+        content="Professional Accounting, Taxation and Advisory services in the UAE. Excellence in compliance and financial strategy.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">C-Suite</div>
+        <nav>
+            <a href="index.html">Home</a>
+
+            <div class="nav-dropdown">
+                <a href="#" class="active">UAE Services ▾</a>
+                <div class="nav-dropdown-content">
+                    <a href="india.html">India</a>
+                    <a href="uae.html">UAE</a>
+                    <a href="usa.html">USA</a>
+                </div>
+            </div>
+
+            <a href="blogs.html">Blog</a>
+            <a href="circulars.html">Circulars</a>
+            <a href="index.html#contact">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="services-page" style="padding-top: 120px;">
+            <h1 class="fade-in">UAE Services</h1>
+            <p class="fade-in"
+                style="text-align: center; max-width: 800px; margin: 0 auto 4rem; color: var(--text-gray);">
+                Expert guidance on UAE corporate governance, compliance, and financial regulations.
+            </p>
+
+            <div class="services-grid fade-in">
+                <!-- 1. Accounting & Financial Reporting -->
+                <div class="service-card" onclick="toggleDropdown('uae-accounting')">
+                    <h3>Accounting & Financial Reporting</h3>
+                    <p>Comprehensive financial record maintenance and IFRS compliance.</p>
+                    <div class="dropdown-container" id="uae-accounting">
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Bookkeeping and maintenance of financial records', event)">Financial
+                            Record Maintenance</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Preparation of financial statements (IFRS-compliant)', event)">IFRS
+                            Financial Statements</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Account payable and receivables reconciliations and payroll processing', event)">Payables,
+                            Receivables & Payroll</button>
+                    </div>
+                </div>
+
+                <!-- 2. Tax Services -->
+                <div class="service-card" onclick="toggleDropdown('uae-tax-new')">
+                    <h3>Tax Services</h3>
+                    <p>VAT and Corporate Tax compliance in the UAE ecosystem.</p>
+                    <div class="dropdown-container" id="uae-tax-new">
+                        <button class="sub-service-btn"
+                            onclick="showDetails('VAT registration, calculation, compliance and filing', event)">VAT
+                            Registration & Filing</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Corporate tax registration, advisory, planning and filing (UAE corporate tax recently introduced)', event)">Corporate
+                            Tax Advisory & Filing</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Strategic tax planning to reduce liabilities legally', event)">Strategic
+                            Tax Planning</button>
+                    </div>
+                </div>
+
+                <!-- 3. Auditing & Assurance -->
+                <div class="service-card" onclick="toggleDropdown('uae-audit-new')">
+                    <h3>Auditing & Assurance</h3>
+                    <p>Statutory and internal audits for transparency and risk management.</p>
+                    <div class="dropdown-container" id="uae-audit-new">
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Statutory (external) audits of financial statements', event)">Statutory
+                            (External) Audit</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Internal audits to assess controls and risks', event)">Internal
+                            Audit</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Assurance and compliance reviews for regulators, banks, and investors', event)">Regulatory
+                            Assurance Reviews</button>
+                    </div>
+                </div>
+
+                <!-- 4. Business Setup & Compliance -->
+                <div class="service-card" onclick="toggleDropdown('uae-setup')">
+                    <h3>Business Setup & Compliance</h3>
+                    <p>Expert guidance on company formation and UAE regulatory laws.</p>
+                    <div class="dropdown-container" id="uae-setup">
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Assistance in company formation (mainland, free zone, offshore)', event)">Company
+                            Formation</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Regulatory compliance with UAE laws and accounting standards', event)">UAE
+                            Law Compliance</button>
+                    </div>
+                </div>
+
+                <!-- 5. Advisory & Strategic Support -->
+                <div class="service-card" onclick="toggleDropdown('uae-advisory-new')">
+                    <h3>Advisory & Strategic Support</h3>
+                    <p>Financial planning and M&A support for sustainable growth.</p>
+                    <div class="dropdown-container" id="uae-advisory-new">
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Financial planning, budgeting, forecasting, and business valuation', event)">Planning
+                            & Valuation</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Mergers & acquisitions support and exit planning', event)">M&A & Exit
+                            Planning</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Risk management, cash-flow analysis, and performance improvement', event)">Risk
+                            & Performance Analysis</button>
+                    </div>
+                </div>
+
+                <!-- 6. Transfer Pricing & International Structuring -->
+                <div class="service-card" onclick="toggleDropdown('uae-tp')">
+                    <h3>Transfer Pricing & International Structuring</h3>
+                    <p>Global structuring and intercompany transaction support.</p>
+                    <div class="dropdown-container" id="uae-tp">
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Transfer Pricing Documentation', event)">Transfer Pricing
+                            Documentation</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Arm’s Length Pricing Advisory', event)">Arm’s Length Pricing</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Intercompany Agreements', event)">Intercompany Agreements</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Cross-Border Structuring', event)">Cross-Border Structuring</button>
+                        <button class="sub-service-btn"
+                            onclick="showDetails('Related Party Transactions Support', event)">Related Party
+                            Transactions</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="details-box fade-in" id="detailsBox">
+                <h3 id="detailsTitle">Select a service</h3>
+                <p id="detailsText">Detailed descriptions and scope of work will appear here when you select a service
+                    from the options above.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer
+        style="padding: 80px 5% 40px; border-top: 1px solid var(--glass-border); background: var(--surface); color: var(--text-gray);">
+        <div style="text-align: center;">
+            <p>&copy; 2026 C-Suite Advisory. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

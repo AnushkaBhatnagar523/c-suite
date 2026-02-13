@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regulatory Circulars | C-Suite</title>
+    <meta name="description" content="Official notifications, CBDT circulars, and GST updates in one place.">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .circulars-hero {
+            padding: 150px 5% 60px;
+            text-align: center;
+            background: radial-gradient(circle at top, rgba(251, 191, 36, 0.05), transparent);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">C-Suite</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <div class="nav-dropdown">
+                <a href="#">Services ▾</a>
+                <div class="nav-dropdown-content">
+                    <a href="india.html">India</a>
+                    <a href="uae.html">UAE</a>
+                    <a href="usa.html">USA</a>
+                </div>
+            </div>
+            <a href="blogs.html">Blog</a>
+            <a href="circulars.html" class="active">Circulars</a>
+            <a href="index.html#contact">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="circulars-hero">
+            <h1 class="fade-in" style="font-size: 3.5rem; margin-bottom: 1.5rem;">Legal & Regulatory Updates</h1>
+            <p class="fade-in" style="color: var(--text-gray); max-width: 700px; margin: 0 auto;">
+                Stay informed with the latest official notifications from CBDT, CBIC, MCA, and other regulatory bodies.
+            </p>
+        </section>
+
+        <section style="padding: 0 5% 100px;">
+            <div id="circular-container">
+                <!-- Circulars will load here -->
+                <div class="loading">Fetching latest updates...</div>
+            </div>
+        </section>
+    </main>
+
+    <footer
+        style="padding: 80px 5% 40px; border-top: 1px solid var(--glass-border); background: var(--surface); color: var(--text-gray);">
+        <div style="text-align: center;">
+            <p>&copy; 2026 C-Suite Advisory. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

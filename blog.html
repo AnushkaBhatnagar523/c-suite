@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog | C-Suite Insights</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo">C-Suite</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <div class="nav-dropdown">
+                <a href="#">Services ▾</a>
+                <div class="nav-dropdown-content">
+                    <a href="india.html">India</a>
+                    <a href="uae.html">UAE</a>
+                    <a href="usa.html">USA</a>
+                </div>
+            </div>
+            <a href="blogs.html" class="active">Blog</a>
+            <a href="circulars.html">Circulars</a>
+            <a href="index.html#contact">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="services-page" style="padding-top: 120px;">
+            <div id="blog-content-container" style="max-width: 800px; margin: 0 auto; padding: 0 5%;">
+                <p style="color: var(--text-gray);">Loading blog content...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer
+        style="padding: 80px 5% 40px; border-top: 1px solid var(--glass-border); background: var(--surface); color: var(--text-gray);">
+        <div style="text-align: center;">
+            <p>&copy; 2026 C-Suite Advisory. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script>
+        async function loadBlog() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const slug = urlParams.get('slug');
+            const container = document.getElementById('blog-content-container');
+
+            if (!slug) {
+                container.innerHTML = '<h1 style="color:#fff;">Blog not found</h1><p style="color:var(--text-gray);">No slug provided in URL.</p><br><a href="blogs.html" class="btn">Back to Blog</a>';
+                return;
+            }
+
+            // Detect API Base
+            const isLocal = window.location.hostname === '127.0.0.1' ||
+                window.location.hostname === 'localhost' ||
+                window.location.protocol === 'file:';
+            const API_BASE = isLocal ? 'http://127.0.0.1:5000' : 'https://c-suite-backend.onrender.com';
+
+            try {
+                console.log(`📡 Fetching blog: ${slug} from ${API_BASE}`);
+                const res = await fetch(`${API_BASE}/api/blogs/slug/${slug}`);
+
+                if (!res.ok) {
+                    const errorData = await res.json().catch(() => ({}));
+                    throw new Error(errorData.message || `Server responded with ${res.status}`);
+                }
+
+                const blog = await res.json();
+
+                container.innerHTML = `
+                    <div style="opacity: 1 !important; transform: none !important;">
+                        <h1 class="fade-in" style="font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 1.5rem; color: #fff; line-height: 1.2;">${blog.title}</h1>
+                        
+                        <div class="fade-in" style="margin-bottom: 3rem; display: flex; flex-wrap: wrap; align-items: center; gap: 15px;">
+                            <span style="background: var(--accent-gold); color: #000; padding: 6px 18px; border-radius: 30px; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">${blog.category || 'Insights'}</span>
+                            <span style="color: var(--text-gray); font-size: 0.95rem;">${new Date(blog.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                            <span style="color: var(--text-gray); font-size: 0.95rem;">• By ${blog.author || 'C-Suite Advisory'}</span>
+                        </div>
+                        
+                        ${blog.image_url ? `
+                        <div class="fade-in" style="margin-bottom: 4rem;">
+                            <img src="${API_BASE}${blog.image_url}" style="width: 100%; border-radius: 24px; border: 1px solid var(--glass-border); box-shadow: 0 40px 80px -15px rgba(0,0,0,0.6);">
+                        </div>` : ''}
+
+                        <div class="fade-in blog-content-body" style="color: #e2e8f0; line-height: 2; font-size: 1.25rem;">
+                            <div style="white-space: pre-wrap;">${blog.content}</div>
+                        </div>
+
+                        <div class="fade-in" style="margin-top: 6rem; padding-top: 3rem; border-top: 1px solid var(--glass-border); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 2rem;">
+                            <a href="blogs.html" class="btn" style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--glass-border);">← Back to Insights</a>
+                            <a href="index.html#contact" class="btn">Expert Consultation</a>
+                        </div>
+                    </div>
+                `;
+
+                // GSAP Logic with cleanup
+                if (window.gsap) {
+                    gsap.fromTo("#blog-content-container .fade-in",
+                        { opacity: 0, y: 40 },
+                        {
+                            opacity: 1,
+                            y: 0,
+                            duration: 1,
+                            stagger: 0.15,
+                            ease: "power4.out"
+                        }
+                    );
+                } else {
+                    // Fallback if GSAP fails to load
+                    document.querySelectorAll('.fade-in').forEach(el => {
+                        el.style.opacity = '1';
+                        el.style.transform = 'none';
+                    });
+                }
+
+            } catch (err) {
+                console.error("❌ Blog Load Error:", err);
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 4rem 2rem; background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 20px;">
+                        <h1 style="color: #fca5a5; margin-bottom: 1rem;">Unable to load blog</h1>
+                        <p style="color: var(--text-gray); margin-bottom: 2rem;">${err.message}</p>
+                        <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 2rem;">Trying to connect to: ${API_BASE}</p>
+                        <a href="blogs.html" class="btn">Return to Blogs</a>
+                    </div>
+                `;
+            }
+        }
+        window.addEventListener('load', loadBlog);
+    </script>
+</body>
+
+</html>

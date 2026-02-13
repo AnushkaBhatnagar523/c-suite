@@ -1,0 +1,27 @@
+# OS junk
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Node (if used later)
+node_modules/
+npm-debug.log
+
+# Environment variables
+.env
+
+# Database (keep .env.example for reference)
+backend/database/*.db
+backend/database/*.db-journal
+
+# Backups
+backend/backups/
+
+# Logs
+*.log
+
+# Uploads
+backend/uploads/
+
