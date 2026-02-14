@@ -3,19 +3,30 @@ const path = require('path');
 
 let activeDb = null;
 
-// PostgreSQL Configuration
-const pgConfig = {
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT || 6543,
-    ssl: { rejectUnauthorized: false },
-    connectionTimeoutMillis: 10000
-};
+// PostgreSQL Configuration Helper
+function getPgConfig() {
+    if (process.env.DATABASE_URL) {
+        return {
+            connectionString: process.env.DATABASE_URL,
+            ssl: { rejectUnauthorized: false },
+            connectionTimeoutMillis: 10000
+        };
+    }
+
+    return {
+        user: process.env.DB_USER,
+        host: process.env.DB_HOST,
+        database: process.env.DB_NAME,
+        password: process.env.DB_PASSWORD,
+        port: process.env.DB_PORT || 5432,
+        ssl: { rejectUnauthorized: false },
+        connectionTimeoutMillis: 10000
+    };
+}
 
 // Helper: Convert SQLite '?' to PG '$n'
 function convertSql(sql) {
+    if (!sql) return sql;
     let index = 1;
     return sql.replace(/\?/g, () => `$${index++}`);
 }
@@ -23,7 +34,16 @@ function convertSql(sql) {
 function init() {
     console.log('🔄 Initializing PostgreSQL Database...');
 
-    const pool = new Pool(pgConfig);
+    const config = getPgConfig();
+
+    // Log configuration status (safely)
+    if (process.env.DATABASE_URL) {
+        console.log('📡 Using DATABASE_URL connection');
+    } else {
+        console.log(`📡 Connecting to ${config.host}:${config.port} as ${config.user}`);
+    }
+
+    const pool = new Pool(config);
 
     return pool.query('SELECT 1')
         .then(function () {
@@ -64,9 +84,14 @@ function init() {
             return p;
         })
         .catch(function (err) {
-            console.error('❌ PostgreSQL Connection Failed:', err.message);
-            console.error('Please check your .env file and ensure PostgreSQL is running.');
-            process.exit(1); // Exit if DB connection fails as we no longer have SQLite fallback
+            console.error('❌ PostgreSQL Connection Failed!');
+            console.error('Error Details:', err.message || err);
+            if (err.code) console.error('Error Code:', err.code);
+            console.error('Environment check:');
+            console.error('- DATABASE_URL present:', !!process.env.DATABASE_URL);
+            console.error('- DB_HOST present:', !!process.env.DB_HOST);
+
+            process.exit(1);
         });
 }
 
