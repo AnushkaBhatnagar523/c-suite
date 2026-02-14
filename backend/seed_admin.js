@@ -2,8 +2,8 @@ require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const db = require('./database/db');
 
-const username = 'anushka@gmail.com';
-const password = 'admin123';
+const username = 'Aaradhya@gmail.com';
+const password = 'Aaradhya123';
 
 bcrypt.hash(password, 10, function (err, hashedPassword) {
     if (err) {

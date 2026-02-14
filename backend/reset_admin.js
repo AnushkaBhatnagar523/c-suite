@@ -1,8 +1,9 @@
+require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const db = require('./database/db');
 
-const email = 'anushka@gmail.com';
-const password = 'admin123';
+const email = 'Aaradhya@gmail.com';
+const password = 'Aaradhya123';
 
 async function resetAdmin() {
     console.log('🔄 Resetting admin users...');

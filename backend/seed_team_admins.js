@@ -3,8 +3,7 @@ const bcrypt = require('bcryptjs');
 const db = require('./database/db');
 
 const admins = [
-    { username: 'bhoomi@gmail.com', password: 'bhoomi123' },
-    { username: 'DPSJassociates@gmail.com', password: 'DPSJ123' }
+    // Previous admins removed as per request
 ];
 
 async function seedAdmins() {
