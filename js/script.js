@@ -330,7 +330,11 @@ document.addEventListener('DOMContentLoaded', () => {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const errorEl = document.getElementById('login-error');
-            const data = Object.fromEntries(new FormData(loginForm));
+            const formData = new FormData(loginForm);
+            const data = {
+                username: formData.get('username').trim(),
+                password: formData.get('password').trim()
+            };
 
             try {
                 const res = await fetch(`${API_BASE}/auth/login`, {
