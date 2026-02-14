@@ -34,7 +34,7 @@ exports.login = function (req, res) {
     const username = req.body.username;
     const password = req.body.password;
 
-    db.get('SELECT * FROM admin_users WHERE username = ?', [username], function (err, user) {
+    db.get('SELECT * FROM admin_users WHERE LOWER(username) = LOWER(?)', [username], function (err, user) {
         if (err) return res.status(500).json({ message: err.message });
         if (!user) return res.status(401).json({ message: 'Invalid credentials' });
 
