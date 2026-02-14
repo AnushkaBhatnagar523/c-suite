@@ -25,3 +25,7 @@ backend/backups/
 # Uploads
 backend/uploads/
 
+# Refact and logs
+.refact/
+backend/*.txt
+

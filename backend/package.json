@@ -5,7 +5,11 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "node app.js"
+    "dev": "node app.js",
+    "migrate": "node migrate_services.js",
+    "backup": "node backup.js backup",
+    "backup:list": "node backup.js list",
+    "backup:restore": "node backup.js restore"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

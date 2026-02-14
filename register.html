@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Registration | C-Suite</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .register-page {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5%;
+            background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.1), transparent),
+                radial-gradient(circle at bottom left, rgba(251, 191, 36, 0.05), transparent);
+        }
+
+        .register-card {
+            background: var(--surface);
+            padding: 3.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+        }
+
+        .register-card h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--text-white);
+        }
+
+        .error-msg {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .success-msg {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid #22c55e;
+            color: #86efac;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .register-card .logo {
+            text-align: center;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .password-requirements {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            margin-top: 0.5rem;
+            padding: 0.75rem;
+            background: rgba(59, 130, 246, 0.05);
+            border-left: 3px solid #3b82f6;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .password-requirements.show {
+            display: block;
+        }
+
+        .auth-link {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .auth-link a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-page">
+        <div class="register-card fade-in">
+            <div class="logo">C-Suite</div>
+            <h1>Staff Registration</h1>
+            <div id="register-error" class="error-msg"></div>
+            <div id="register-success" class="success-msg"></div>
+            <form id="admin-register-form-page">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" id="username" required placeholder="Enter username" minlength="3">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" id="password" required placeholder="Enter password" minlength="6">
+                    <div class="password-requirements" id="password-requirements">
+                        <strong>Password Requirements:</strong>
+                        <ul style="margin: 0.5rem 0 0 1.2rem;">
+                            <li>At least 6 characters long</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" name="confirmPassword" id="confirmPassword" required placeholder="Confirm password" minlength="6">
+                </div>
+                <button type="submit" class="btn" style="width: 100%; margin-top: 1.5rem; padding: 1.2rem;">Create Account</button>
+            </form>
+            <div class="auth-link">
+                Already have an account? <a href="login.html">Login here</a>
+            </div>
+            <div style="text-align: center; margin-top: 1rem;">
+                <a href="index.html" style="color: var(--text-gray); text-decoration: none; font-size: 0.9rem;">← Back to Website</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script>
+        gsap.to(".fade-in", { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: 0.2 });
+
+        const API_BASE = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
+            ? 'http://127.0.0.1:5000/api'
+            : 'https://c-suite-backend.onrender.com/api';
+
+        const registerForm = document.getElementById('admin-register-form-page');
+        const errorEl = document.getElementById('register-error');
+        const successEl = document.getElementById('register-success');
+        const passwordInput = document.getElementById('password');
+        const passwordReq = document.getElementById('password-requirements');
+
+        // Show password requirements when focused
+        passwordInput.addEventListener('focus', () => {
+            passwordReq.classList.add('show');
+        });
+
+        passwordInput.addEventListener('blur', () => {
+            if (!passwordInput.value) {
+                passwordReq.classList.remove('show');
+            }
+        });
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorEl.style.display = 'none';
+            successEl.style.display = 'none';
+
+            const formData = new FormData(registerForm);
+            const username = formData.get('username');
+            const password = formData.get('password');
+            const confirmPassword = formData.get('confirmPassword');
+
+            // Validation
+            if (username.length < 3) {
+                errorEl.innerText = 'Username must be at least 3 characters long';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            if (password.length < 6) {
+                errorEl.innerText = 'Password must be at least 6 characters long';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                errorEl.innerText = 'Passwords do not match';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password,
+                        role: 'admin'
+                    })
+                });
+
+                const result = await res.json();
+
+                if (res.ok) {
+                    successEl.innerText = 'Account created successfully! Redirecting to login...';
+                    successEl.style.display = 'block';
+                    registerForm.reset();
+                    passwordReq.classList.remove('show');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    errorEl.innerText = result.message || 'Registration failed';
+                    errorEl.style.display = 'block';
+                }
+            } catch (err) {
+                errorEl.innerText = 'Unable to connect to security server.';
+                errorEl.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+
+</html>

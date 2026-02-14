@@ -84,9 +84,14 @@
     <script>
         gsap.to(".fade-in", { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: 0.2 });
 
-        const API_BASE = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
+        const isLocal = window.location.hostname === '127.0.0.1' ||
+            window.location.hostname === 'localhost' ||
+            window.location.hostname === '' ||
+            window.location.protocol === 'file:';
+
+        const API_BASE = isLocal
             ? 'http://127.0.0.1:5000/api'
-            : 'https://c-suite-backend.onrender.com/api'; // Replace with your actual Render URL if different
+            : 'https://c-suite-backend.onrender.com/api';
         const loginForm = document.getElementById('admin-login-form-page');
         const errorEl = document.getElementById('login-error');
 
@@ -94,11 +99,7 @@
             e.preventDefault();
             errorEl.style.display = 'none';
 
-            const formData = new FormData(loginForm);
-            const data = {
-                username: formData.get('username').trim(),
-                password: formData.get('password').trim()
-            };
+            const data = Object.fromEntries(new FormData(loginForm));
 
             try {
                 const res = await fetch(`${API_BASE}/auth/login`, {
@@ -121,32 +122,7 @@
                 errorEl.style.display = 'block';
             }
         });
-
-        // Emergency Fix Function
-        async function fixAdminAccess() {
-            const btn = document.getElementById('fix-btn');
-            btn.innerText = 'Syncing...';
-            try {
-                const res = await fetch(`${API_BASE}/auth/register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: 'Aaradhya@gmail.com', password: 'Aaradhya123' })
-                });
-                const result = await res.json();
-                alert(result.message || 'Sync completed. Please try logging in now.');
-            } catch (err) {
-                alert('Connection to server failed. Please wait 1 minute for server to start.');
-            } finally {
-                btn.innerText = 'Fix Admin Sync';
-            }
-        }
     </script>
-    <div style="text-align: center; margin-top: 2rem;">
-        <p style="color: var(--text-gray); font-size: 0.8rem; margin-bottom: 0.5rem;">Connection issues?</p>
-        <button id="fix-btn" onclick="fixAdminAccess()"
-            style="background: none; border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Fix
-            Admin Sync</button>
-    </div>
 </body>
 
 </html>

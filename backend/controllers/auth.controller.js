@@ -31,22 +31,38 @@ exports.register = function (req, res) {
 };
 
 exports.login = function (req, res) {
-    const username = req.body.username;
-    const password = req.body.password;
+    const username = req.body.username?.trim();
+    const password = req.body.password?.trim();
 
-    db.get('SELECT * FROM admin_users WHERE LOWER(username) = LOWER(?)', [username], function (err, user) {
+    console.log("Login attempt:", username);
+
+    db.get('SELECT * FROM admin_users WHERE username = ?', [username], function (err, user) {
         if (err) return res.status(500).json({ message: err.message });
-        if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+
+        console.log("User from DB:", user);
+
+        if (!user) {
+            console.log("User not found");
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
 
         bcrypt.compare(password, user.password_hash, function (err, isMatch) {
             if (err) return res.status(500).json({ message: err.message });
-            if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
-            const token = jwt.sign({ id: user.id, username: user.username, role: user.role }, process.env.JWT_SECRET, {
-                expiresIn: '24h',
-            });
+            console.log("Password match:", isMatch);
 
-            res.json({ token: token, username: user.username, role: user.role });
+            if (!isMatch) {
+                console.log("Password incorrect");
+                return res.status(401).json({ message: 'Invalid credentials' });
+            }
+
+            const token = jwt.sign(
+                { id: user.id, username: user.username, role: user.role },
+                process.env.JWT_SECRET,
+                { expiresIn: '24h' }
+            );
+
+            res.json({ token, username: user.username, role: user.role });
         });
     });
 };

@@ -3,7 +3,8 @@ const bcrypt = require('bcryptjs');
 const db = require('./database/db');
 
 const admins = [
-    // Previous admins removed as per request
+    { username: 'bhoomi@gmail.com', password: 'bhoomi123' },
+    { username: 'DPSJassociates@gmail.com', password: 'DPSJ123' }
 ];
 
 async function seedAdmins() {
@@ -12,7 +13,7 @@ async function seedAdmins() {
         const hashedPassword = await bcrypt.hash(admin.password, 10);
         await new Promise((resolve, reject) => {
             db.run(
-                'INSERT INTO admin_users (username, password_hash, role) VALUES (?, ?, ?) ON CONFLICT (username) DO NOTHING',
+                'INSERT INTO admin_users (username, password_hash, role) VALUES (?, ?, ?) ON CONFLICT (username) DO UPDATE SET password_hash = EXCLUDED.password_hash',
                 [admin.username, hashedPassword, 'admin'],
                 function (err) {
                     if (err) {
