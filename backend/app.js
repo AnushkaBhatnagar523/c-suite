@@ -57,6 +57,22 @@ app.get('/health', (req, res) => {
     res.json({ status: 'OK' });
 });
 
+// EMERGENCY SETUP ROUTE (Delete after use)
+app.get('/api/emergency-setup', async (req, res) => {
+    const bcrypt = require('bcryptjs');
+    const user = 'Aaradhya@gmail.com';
+    const pass = 'Aaradhya123';
+    const hash = await bcrypt.hash(pass, 10);
+
+    db.run('DELETE FROM admin_users', [], function (err) {
+        if (err) return res.status(500).json({ error: err.message });
+        db.run('INSERT INTO admin_users (username, password_hash, role) VALUES (?, ?, ?)', [user, hash, 'admin'], function (err) {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json({ message: 'Master admin created successfully on LIVE server', user: user });
+        });
+    });
+});
+
 // Stats Endpoint
 app.get('/api/stats', (req, res) => {
     const stats = {};
