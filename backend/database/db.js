@@ -4,15 +4,25 @@ const path = require('path');
 let activeDb = null;
 
 // PostgreSQL Configuration
-const pgConfig = {
+const pgConfig = process.env.DATABASE_URL ? {
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
+    connectionTimeoutMillis: 10000
+} : {
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT || 6543,
+    port: process.env.DB_PORT || 5432,
     ssl: { rejectUnauthorized: false },
     connectionTimeoutMillis: 10000
 };
+
+// Validate config
+if (!process.env.DATABASE_URL && !process.env.DB_HOST) {
+    console.error('⚠️ Warning: No PostgreSQL configuration found in environment variables.');
+    console.error('Please set DATABASE_URL or DB_USER, DB_PASSWORD, DB_HOST, DB_NAME.');
+}
 
 // Helper: Convert SQLite '?' to PG '$n'
 function convertSql(sql) {

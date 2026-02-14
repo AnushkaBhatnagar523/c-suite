@@ -1,0 +1,13 @@
+{
+  "name": "c-suite-root",
+  "version": "1.0.0",
+  "description": "Root of C-Suite Project",
+  "scripts": {
+    "install-all": "npm install && cd backend && npm install",
+    "build": "cd backend && npm install",
+    "start": "cd backend && node app.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
