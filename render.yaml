@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: c-suite-backend
+    env: node
+    plan: free
+    region: singapore # or your preferred region
+    buildCommand: "cd backend && npm install"
+    startCommand: "cd backend && node app.js"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: "*"
