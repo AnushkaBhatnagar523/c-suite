@@ -54,7 +54,7 @@ app.use('/api/analytics', analyticsRoutes);
 
 // Health Check
 app.get('/health', (req, res) => {
-    res.json({ status: 'OK', version: '1.0.1_emergency' });
+    res.json({ status: 'OK', version: '1.0.2', time: '2026-02-14 14:15' });
 });
 
 // EMERGENCY SETUP ROUTE (Delete after use)
