@@ -1,5 +1,4 @@
 const { Pool } = require('pg');
-const path = require('path');
 
 let activeDb = null;
 
@@ -111,6 +110,8 @@ const safeQuery = (method) => (sql, params, cb) => {
     initPromise.then(() => {
         if (!activeDb) return actualCb(new Error('Database not initialized'));
         activeDb[method](sql, actualParams || [], actualCb);
+    }).catch(err => {
+        if (actualCb) actualCb(err);
     });
 };
 
