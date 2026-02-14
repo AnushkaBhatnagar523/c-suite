@@ -5,9 +5,12 @@ let activeDb = null;
 // PostgreSQL Configuration Helper
 function getPgConfig() {
     if (process.env.DATABASE_URL) {
+        // Create a config that forces SSL off but uses the connection string
         return {
-            connectionString: process.env.DATABASE_URL,
-            ssl: { rejectUnauthorized: false },
+            connectionString: process.env.DATABASE_URL.split('?')[0], // Strip existing params to avoid conflicts
+            ssl: {
+                rejectUnauthorized: false
+            },
             connectionTimeoutMillis: 10000
         };
     }
