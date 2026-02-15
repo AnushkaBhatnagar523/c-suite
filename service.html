@@ -92,6 +92,7 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="js/service-data.js"></script>
     <script>
         async function loadService() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -100,6 +101,12 @@
 
             if (!slug) {
                 container.innerHTML = '<h1>Service not found</h1><a href="index.html" class="btn">Back to Home</a>';
+                return;
+            }
+
+            // Check static data first for faster response or if backend is offline
+            if (typeof staticServices !== 'undefined' && staticServices[slug]) {
+                renderService(staticServices[slug]);
                 return;
             }
 
@@ -112,52 +119,68 @@
                 const res = await fetch(`${API_BASE}/api/services/${slug}`);
                 if (!res.ok) throw new Error('Service not found');
                 const service = await res.json();
-
-                // Update Page Title and Meta
-                document.title = `${service.service_name} | C-Suite`;
-                if (service.meta_description) {
-                    let meta = document.querySelector('meta[name="description"]');
-                    if (!meta) {
-                        meta = document.createElement('meta');
-                        meta.name = "description";
-                        document.head.appendChild(meta);
-                    }
-                    meta.content = service.meta_description;
+                renderService(service);
+            } catch (err) {
+                // Final fallback: try to find by generic name if slug matches common patterns
+                const name = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                if (typeof getGenericService !== 'undefined') {
+                    renderService(getGenericService(name));
+                } else {
+                    container.innerHTML = '<h1>Service not found</h1><a href="index.html" class="btn">Back to Home</a>';
                 }
+            }
+        }
 
-                let subServicesHtml = '';
-                if (service.sub_services) {
-                    try {
-                        const subs = JSON.parse(service.sub_services);
-                        subServicesHtml = `
-                            <div class="sub-services-grid">
-                                ${subs.map(s => `
-                                    <div class="sub-service-card fade-in">
-                                        <h4 style="color: var(--accent-gold); margin-bottom: 10px;">${s.name}</h4>
-                                        <p style="font-size: 0.95rem; line-height: 1.6;">${s.description}</p>
-                                    </div>
-                                `).join('')}
+        function renderService(service) {
+            const container = document.getElementById('service-container');
+            const serviceName = service.service_name || service.name;
+            const description = service.description || '';
+            const applicable_acts = service.applicable_acts || service.acts || 'N/A';
+
+            // Update Page Title and Meta
+            document.title = `${serviceName} | C-Suite`;
+
+            let subServicesHtml = '';
+            let subServices = [];
+
+            if (service.sub_services) {
+                if (typeof service.sub_services === 'string') {
+                    try { subServices = JSON.parse(service.sub_services); } catch (e) { console.error(e); }
+                } else {
+                    subServices = service.sub_services;
+                }
+            }
+
+            if (subServices && subServices.length > 0) {
+                subServicesHtml = `
+                    <div class="sub-services-grid">
+                        ${subServices.map(s => `
+                            <div class="sub-service-card fade-in">
+                                <h4 style="color: var(--accent-gold); margin-bottom: 10px;">${s.name}</h4>
+                                <p style="font-size: 0.95rem; line-height: 1.6;">${s.description}</p>
                             </div>
-                        `;
-                    } catch (e) { console.error("Error parsing sub-services", e); }
-                }
-
-                container.innerHTML = `
-                    <a href="javascript:history.back()" class="back-link">← Back</a>
-                    <h1 class="fade-in" style="font-size: 2.8rem; margin-bottom: 1rem;">${service.service_name}</h1>
-                    <div class="meta-info fade-in">
-                        <span>Applicable Acts: ${service.applicable_acts || 'N/A'}</span>
-                    </div>
-                    <div class="fade-in" style="font-size: 1.1rem; line-height: 1.8; color: var(--text-gray); margin-bottom: 30px;">
-                        ${service.description || ''}
-                    </div>
-                    ${subServicesHtml}
-                    <div style="margin-top: 50px;" class="fade-in">
-                        <a href="index.html#contact" class="btn">Enquire About This Service</a>
+                        `).join('')}
                     </div>
                 `;
+            }
 
-                // GSAP Animations
+            container.innerHTML = `
+                <a href="javascript:history.back()" class="back-link">← Back</a>
+                <h1 class="fade-in" style="font-size: 2.8rem; margin-bottom: 1rem;">${serviceName}</h1>
+                <div class="meta-info fade-in">
+                    <span>Applicable Acts: ${applicable_acts}</span>
+                </div>
+                <div class="fade-in" style="font-size: 1.1rem; line-height: 1.8; color: var(--text-gray); margin-bottom: 30px;">
+                    ${description}
+                </div>
+                ${subServicesHtml}
+                <div style="margin-top: 50px;" class="fade-in">
+                    <a href="index.html#contact" class="btn">Enquire About This Service</a>
+                </div>
+            `;
+
+            // GSAP Animations
+            if (window.gsap) {
                 gsap.fromTo(".fade-in",
                     { opacity: 0, y: 20 },
                     {
@@ -168,9 +191,6 @@
                         ease: "power2.out"
                     }
                 );
-
-            } catch (err) {
-                container.innerHTML = '<h1>Service not found</h1><a href="index.html" class="btn">Back to Home</a>';
             }
         }
         loadService();

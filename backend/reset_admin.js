@@ -1,8 +1,10 @@
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 const bcrypt = require('bcryptjs');
 const db = require('./database/db');
 
-const email = 'anushka@gmail.com';
-const password = 'admin123';
+const email = 'Csuite@gmail.com';
+const password = 'Csuite123';
 
 async function resetAdmin() {
     console.log('🔄 Resetting admin users...');

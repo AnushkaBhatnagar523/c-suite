@@ -47,14 +47,18 @@
                     <p>End-to-end setup for all entity types.</p>
                     <div class="dropdown-container" id="in-inc">
                         <button class="sub-service-btn"
-                            onclick="showDetails('Company Incorporation', event)">Company</button>
-                        <button class="sub-service-btn" onclick="showDetails('Partnership Firm', event)">Partnership
+                            onclick="location.href='service.html?slug=company-inc'; event.stopPropagation();">Company</button>
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=partnership-inc'; event.stopPropagation();">Partnership
                             Firm</button>
                         <button class="sub-service-btn"
-                            onclick="showDetails('Society Registration', event)">Society</button>
-                        <button class="sub-service-btn" onclick="showDetails('HUF Registration', event)">Hindu Undivided
+                            onclick="location.href='service.html?slug=society-inc'; event.stopPropagation();">Society</button>
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=huf-inc'; event.stopPropagation();">Hindu
+                            Undivided
                             Family</button>
-                        <button class="sub-service-btn" onclick="showDetails('Sole Proprietorship', event)">Sole
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=sole-proprietorship-inc'; event.stopPropagation();">Sole
                             Proprietorship</button>
                     </div>
                 </div>
@@ -64,42 +68,60 @@
                     <h3>Compliance & Registrations</h3>
                     <p>Adhering to all statutory regulations.</p>
                     <div class="dropdown-container" id="in-comp">
-                        <button class="sub-service-btn" onclick="location.href='service.html?slug=compliance'">Company
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=compliance'; event.stopPropagation();">Company
                             Act</button>
-                        <button class="sub-service-btn" onclick="showDetails('LLP Act Compliance', event)">LLP
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=llp-act'; event.stopPropagation();">LLP
                             Act</button>
-                        <button class="sub-service-btn" onclick="location.href='service.html?slug=income-tax'">Income
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=income-tax'; event.stopPropagation();">Income
                             Tax
                             Act, 1961</button>
-                        <button class="sub-service-btn" onclick="location.href='service.html?slug=gst'">GST Act</button>
-                        <button class="sub-service-btn" onclick="showDetails('FEMA Compliance', event)">FEMA
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=gst'; event.stopPropagation();">GST Act</button>
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=fema-act'; event.stopPropagation();">FEMA
                             Act</button>
-                        <button class="sub-service-btn" onclick="showDetails('MSME Compliance', event)">MSME</button>
-                        <button class="sub-service-btn" onclick="location.href='service.html?slug=labour-law'">Labour
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=msme'; event.stopPropagation();">MSME</button>
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=labour-law'; event.stopPropagation();">Labour
                             Law
                             Compliance</button>
                         <button class="sub-service-btn"
-                            onclick="showDetails('Societies Registration Act', event)">Societies Registration
+                            onclick="location.href='service.html?slug=society-act'; event.stopPropagation();">Societies
+                            Registration
                             Act</button>
-                        <button class="sub-service-btn" onclick="showDetails('Trust & NGO Compliance', event)">Trust &
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=trust-ngo'; event.stopPropagation();">Trust &
                             NGO Compliance</button>
                     </div>
                 </div>
 
                 <!-- 3. Audit -->
-                <div class="service-card" onclick="location.href='service.html?slug=audit'">
+                <div class="service-card" onclick="toggleDropdown('in-audit')">
                     <h3>Audit & Assurance</h3>
                     <p>Comprehensive auditing solutions.</p>
                     <div class="dropdown-container" id="in-audit">
-                        <button class="sub-service-btn" onclick="showDetails('Statutory Audit', event)">Statutory
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=statutory-audit'; event.stopPropagation();">Statutory
                             Audit</button>
-                        <button class="sub-service-btn" onclick="showDetails('Tax Audit', event)">Tax Audit</button>
-                        <button class="sub-service-btn" onclick="showDetails('GST Audit', event)">GST Audit</button>
-                        <button class="sub-service-btn" onclick="showDetails('Internal Audit', event)">Internal
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=tax-audit'; event.stopPropagation();">Tax
                             Audit</button>
-                        <button class="sub-service-btn" onclick="showDetails('Concurrent Audit', event)">Concurrent
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=gst-audit'; event.stopPropagation();">GST
                             Audit</button>
-                        <button class="sub-service-btn" onclick="showDetails('Stock Audit', event)">Stock Audit</button>
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=internal-audit'; event.stopPropagation();">Internal
+                            Audit</button>
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=concurrent-audit'; event.stopPropagation();">Concurrent
+                            Audit</button>
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=stock-audit'; event.stopPropagation();">Stock
+                            Audit</button>
                     </div>
                 </div>
 
@@ -108,15 +130,22 @@
                     <h3>Income Tax & GST Notices – Assistance</h3>
                     <p>Meaningful Action Required: Handling regulatory notices with expert precision.</p>
                     <div class="dropdown-container" id="in-notice">
-                        <button class="sub-service-btn" onclick="showDetails('Notice under 143(1)', event)">Notice under
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=notice-143-1'; event.stopPropagation();">Notice
+                            under
                             143(1)</button>
-                        <button class="sub-service-btn" onclick="showDetails('Scrutiny notices', event)">Scrutiny
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=scrutiny-notices'; event.stopPropagation();">Scrutiny
                             Notices</button>
-                        <button class="sub-service-btn" onclick="showDetails('GST SCN (Show Cause Notice)', event)">GST
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=gst-scn'; event.stopPropagation();">GST
                             SCN</button>
-                        <button class="sub-service-btn" onclick="showDetails('Demand notices', event)">Demand
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=demand-notices'; event.stopPropagation();">Demand
                             Notices</button>
-                        <button class="sub-service-btn" onclick="showDetails('Company Act Notices', event)">Company Act
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=company-act-notices'; event.stopPropagation();">Company
+                            Act
                             Notices</button>
                         <button class="sub-service-btn" onclick="location.href='index.html#contact'">Get Expert
                             Help</button>
@@ -128,23 +157,31 @@
                     <h3>Finance & Advisory</h3>
                     <p>Strategic financial planning and reports.</p>
                     <div class="dropdown-container" id="in-fin">
-                        <button class="sub-service-btn" onclick="showDetails('Project Report', event)">Project
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=project-report'; event.stopPropagation();">Project
                             Report</button>
-                        <button class="sub-service-btn" onclick="showDetails('Government Grant', event)">Govt.
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=govt-grant'; event.stopPropagation();">Govt.
                             Grant</button>
-                        <button class="sub-service-btn" onclick="showDetails('CMA Data', event)">CMA</button>
-                        <button class="sub-service-btn" onclick="showDetails('Subsidies', event)">Subsidies</button>
-                        <button class="sub-service-btn" onclick="showDetails('Due Diligence', event)">Due Diligence
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=cma-data'; event.stopPropagation();">CMA</button>
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=subsidies'; event.stopPropagation();">Subsidies</button>
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=due-diligence'; event.stopPropagation();">Due
+                            Diligence
                             Report</button>
-                        <button class="sub-service-btn" onclick="showDetails('Net Worth Certificate', event)">Net Worth
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=net-worth'; event.stopPropagation();">Net Worth
                             Certificate</button>
-                        <button class="sub-service-btn" onclick="showDetails('Turnover Certificate', event)">Turnover
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=turnover-cert'; event.stopPropagation();">Turnover
                             Certificate</button>
                     </div>
                 </div>
 
                 <!-- 6. Bookkeeping -->
-                <div class="service-card" onclick="showDetails('Bookkeeping and Accountancy', event)">
+                <div class="service-card" onclick="location.href='service.html?slug=bookkeeping'">
                     <h3>Bookkeeping</h3>
                     <p>Professional accountancy and ledger maintenance.</p>
                 </div>
@@ -155,16 +192,21 @@
                     <p>Global structuring and intercompany transaction support.</p>
                     <div class="dropdown-container" id="in-international">
                         <button class="sub-service-btn"
-                            onclick="showDetails('Transfer Pricing Documentation', event)">Transfer Pricing
+                            onclick="location.href='service.html?slug=transfer-pricing'; event.stopPropagation();">Transfer
+                            Pricing
                             Documentation</button>
                         <button class="sub-service-btn"
-                            onclick="showDetails('Arm’s Length Pricing Advisory', event)">Arm’s Length Pricing</button>
+                            onclick="location.href='service.html?slug=arms-length'; event.stopPropagation();">Arm’s
+                            Length Pricing</button>
                         <button class="sub-service-btn"
-                            onclick="showDetails('Intercompany Agreements', event)">Intercompany Agreements</button>
+                            onclick="location.href='service.html?slug=intercompany-agreements'; event.stopPropagation();">Intercompany
+                            Agreements</button>
                         <button class="sub-service-btn"
-                            onclick="showDetails('Cross-Border Structuring', event)">Cross-Border Structuring</button>
+                            onclick="location.href='service.html?slug=cross-border'; event.stopPropagation();">Cross-Border
+                            Structuring</button>
                         <button class="sub-service-btn"
-                            onclick="showDetails('Related Party Transactions Support', event)">Related Party
+                            onclick="location.href='service.html?slug=related-party'; event.stopPropagation();">Related
+                            Party
                             Transactions</button>
                     </div>
                 </div>
@@ -174,11 +216,14 @@
                     <h3>Intellectual Property Services</h3>
                     <p>Trademark registration and brand protection advisory.</p>
                     <div class="dropdown-container" id="in-ip">
-                        <button class="sub-service-btn" onclick="showDetails('Trademark Filing', event)">Trademark
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=trademark-filing'; event.stopPropagation();">Trademark
                             Filing</button>
-                        <button class="sub-service-btn" onclick="showDetails('Trademark Monitoring', event)">Trademark
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=trademark-monitoring'; event.stopPropagation();">Trademark
                             Monitoring</button>
-                        <button class="sub-service-btn" onclick="showDetails('Brand Protection Advisory', event)">Brand
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=brand-protection'; event.stopPropagation();">Brand
                             Protection Advisory</button>
                     </div>
                 </div>

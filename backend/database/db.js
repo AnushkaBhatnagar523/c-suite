@@ -11,7 +11,7 @@ function getPgConfig() {
             ssl: {
                 rejectUnauthorized: false
             },
-            connectionTimeoutMillis: 10000
+            connectionTimeoutMillis: 30000
         };
     }
 
@@ -22,7 +22,7 @@ function getPgConfig() {
         password: process.env.DB_PASSWORD,
         port: process.env.DB_PORT || 5432,
         ssl: { rejectUnauthorized: false },
-        connectionTimeoutMillis: 10000
+        connectionTimeoutMillis: 30000
     };
 }
 

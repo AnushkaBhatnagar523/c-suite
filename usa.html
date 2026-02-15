@@ -46,28 +46,22 @@
                     <h3>Business Formation & Registration</h3>
                     <p>Comprehensive setup for LLC, C-Corp, S-Corp and more.</p>
                     <div class="dropdown-container" id="us-formation">
-                        <button class="sub-service-btn" onclick="showDetails('LLC Registration', event)">LLC
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=usa-llc'; event.stopPropagation();">LLC
                             Registration</button>
-                        <button class="sub-service-btn" onclick="showDetails('C-Corp Registration', event)">C-Corp
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=usa-c-corp'; event.stopPropagation();">C-Corp
                             Registration</button>
-                        <button class="sub-service-btn" onclick="showDetails('S-Corp Registration', event)">S-Corp
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=usa-s-corp'; event.stopPropagation();">S-Corp
                             Registration</button>
-                        <button class="sub-service-btn" onclick="showDetails('EIN Application', event)">EIN
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=usa-ein'; event.stopPropagation();">EIN
                             Application</button>
                         <button class="sub-service-btn"
-                            onclick="showDetails('Registered Agent Assistance', event)">Registered Agent
+                            onclick="location.href='service.html?slug=usa-registered-agent'; event.stopPropagation();">Registered
+                            Agent
                             Assistance</button>
-                        <button class="sub-service-btn"
-                            onclick="showDetails('Operating Agreement / Bylaws', event)">Operating Agreement /
-                            Bylaws</button>
-                        <button class="sub-service-btn"
-                            onclick="showDetails('Foreign Company Registration (US Expansion)', event)">Foreign Company
-                            Registration</button>
-                        <button class="sub-service-btn" onclick="showDetails('Startup Advisory', event)">Startup
-                            Advisory</button>
-                        <button class="sub-service-btn"
-                            onclick="showDetails('Post-Incorporation Compliance Setup', event)">Post-Incorporation
-                            Compliance</button>
                     </div>
                 </div>
 
@@ -76,49 +70,41 @@
                     <h3>Accounting & Bookkeeping</h3>
                     <p>Professional financial record management and reporting.</p>
                     <div class="dropdown-container" id="us-accounting">
-                        <button class="sub-service-btn" onclick="showDetails('Monthly Bookkeeping', event)">Monthly
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=usa-bookkeeping'; event.stopPropagation();">Monthly
                             Bookkeeping</button>
-                        <button class="sub-service-btn" onclick="showDetails('Cloud Accounting Setup', event)">Cloud
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=usa-cloud-accounting'; event.stopPropagation();">Cloud
                             Accounting Setup</button>
                         <button class="sub-service-btn"
-                            onclick="showDetails('Accounts Payable & Receivable', event)">Accounts Payable &
+                            onclick="location.href='service.html?slug=usa-payables-receivables'; event.stopPropagation();">Accounts
+                            Payable &
                             Receivable</button>
-                        <button class="sub-service-btn" onclick="showDetails('Bank Reconciliation', event)">Bank
-                            Reconciliation</button>
                         <button class="sub-service-btn"
-                            onclick="showDetails('Financial Statements Preparation', event)">Financial Statements
-                            Preparation</button>
-                        <button class="sub-service-btn"
-                            onclick="showDetails('Catch-Up & Clean-Up Bookkeeping', event)">Catch-Up & Clean-Up</button>
-                        <button class="sub-service-btn" onclick="showDetails('Virtual CFO Services', event)">Virtual CFO
+                            onclick="location.href='service.html?slug=usa-cfo'; event.stopPropagation();">Virtual CFO
                             Services</button>
-                        <button class="sub-service-btn" onclick="showDetails('Management Reports', event)">Management
-                            Reports</button>
                     </div>
                 </div>
 
                 <!-- 3. Taxation Services -->
                 <div class="service-card" onclick="toggleDropdown('us-tax')">
-                    <h3>Taxation Services</h3>
+                    <h3>Taxation & Planning</h3>
                     <p>Federal, state, and specialized tax filing solutions.</p>
                     <div class="dropdown-container" id="us-tax">
-                        <button class="sub-service-btn" onclick="showDetails('Federal Tax Returns', event)">Federal Tax
-                            Returns</button>
-                        <button class="sub-service-btn" onclick="showDetails('State Tax Returns', event)">State Tax
-                            Returns</button>
-                        <button class="sub-service-btn" onclick="showDetails('LLC & Corporate Tax Filing', event)">LLC &
-                            Corporate Tax Filing</button>
                         <button class="sub-service-btn"
-                            onclick="showDetails('Individual Tax Returns (Founders / NRIs)', event)">Individual Tax
+                            onclick="location.href='service.html?slug=usa-federal-tax'; event.stopPropagation();">Federal
+                            Tax
                             Returns</button>
                         <button class="sub-service-btn"
-                            onclick="showDetails('Sales Tax Registration & Filing', event)">Sales Tax Registration &
-                            Filing</button>
+                            onclick="location.href='service.html?slug=usa-state-tax'; event.stopPropagation();">State
+                            Tax
+                            Returns</button>
                         <button class="sub-service-btn"
-                            onclick="showDetails('IRS Notices & Resolution Support', event)">IRS Notices &
-                            Resolution</button>
-                        <button class="sub-service-btn" onclick="showDetails('ITIN Application', event)">ITIN
-                            Application</button>
+                            onclick="location.href='service.html?slug=usa-tax-optimization'; event.stopPropagation();">Tax
+                            Optimization Strategies</button>
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=usa-cross-border-tax'; event.stopPropagation();">Cross-Border
+                            Tax Planning</button>
                     </div>
                 </div>
 
@@ -150,18 +136,15 @@
                     <h3>Licenses & Regulatory Compliance</h3>
                     <p>Comprehensive licensing and reporting management.</p>
                     <div class="dropdown-container" id="us-compliance">
-                        <button class="sub-service-btn" onclick="showDetails('Business Licenses', event)">Business
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=usa-permits'; event.stopPropagation();">Business
                             Licenses</button>
                         <button class="sub-service-btn"
-                            onclick="showDetails('Industry-Specific Permits', event)">Industry-Specific Permits</button>
-                        <button class="sub-service-btn" onclick="showDetails('Annual Reports Filing', event)">Annual
-                            Reports Filing</button>
-                        <button class="sub-service-btn" onclick="showDetails('BOI Reporting', event)">BOI
+                            onclick="location.href='service.html?slug=boi-reporting'; event.stopPropagation();">BOI
                             Reporting</button>
                         <button class="sub-service-btn"
-                            onclick="showDetails('Compliance Calendar Management', event)">Compliance Calendar</button>
-                        <button class="sub-service-btn"
-                            onclick="showDetails('Registered Agent Renewals', event)">Registered Agent Renewals</button>
+                            onclick="location.href='service.html?slug=usa-annual-reports'; event.stopPropagation();">Annual
+                            Reports Filing</button>
                     </div>
                 </div>
 
@@ -190,14 +173,14 @@
                     <h3>Intellectual Property Services</h3>
                     <p>Trademark registration and brand protection advisory.</p>
                     <div class="dropdown-container" id="us-ip">
-                        <button class="sub-service-btn" onclick="showDetails('Trademark Filing', event)">Trademark
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=trademark-filing'; event.stopPropagation();">Trademark
                             Filing</button>
-                        <button class="sub-service-btn" onclick="showDetails('Trademark Monitoring', event)">Trademark
+                        <button class="sub-service-btn"
+                            onclick="location.href='service.html?slug=trademark-monitoring'; event.stopPropagation();">Trademark
                             Monitoring</button>
                         <button class="sub-service-btn"
-                            onclick="showDetails('Responding to USPTO Objections', event)">USPTO Objections
-                            Support</button>
-                        <button class="sub-service-btn" onclick="showDetails('Brand Protection Advisory', event)">Brand
+                            onclick="location.href='service.html?slug=brand-protection'; event.stopPropagation();">Brand
                             Protection Advisory</button>
                     </div>
                 </div>

@@ -25,9 +25,17 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
 
 app.use(cors({
     origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl) or null (local files)
-        if (!origin || origin === 'null') return callback(null, true);
-        return callback(null, true); // Allow all other origins as well
+        // Allow requests with no origin (like local files or mobile apps)
+        if (!origin || origin === 'null' || origin.startsWith('file://')) {
+            return callback(null, true);
+        }
+
+        if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes('*')) {
+            return callback(null, true);
+        } else {
+            console.log('Blocked by CORS:', origin);
+            return callback(new Error('Not allowed by CORS'));
+        }
     },
     credentials: true
 }));
