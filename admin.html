@@ -56,6 +56,7 @@
                 <button type="button" class="manage-tab-btn active" onclick="switchManageTab('blogs')">Blogs</button>
                 <button type="button" class="manage-tab-btn" onclick="switchManageTab('circulars')">Circulars</button>
                 <button type="button" class="manage-tab-btn" onclick="switchManageTab('services')">Services</button>
+                <button type="button" class="manage-tab-btn" onclick="switchManageTab('enquiries')">Enquiries</button>
             </div>
 
             <!-- Blogs Management -->
@@ -142,6 +143,14 @@
                 <p style="color: var(--text-gray); margin-bottom: 2rem; text-align: center;">Currently in read-only mode
                     for safety. Contact system administrator for service structure changes.</p>
                 <div id="manage-services-list" class="items-list-container"></div>
+            </div>
+
+            <!-- Enquiries Management -->
+            <div id="manage-enquiries" class="manage-content">
+                <h2 style="font-size: 2rem; margin-bottom: 2rem; text-align: center; color: var(--accent-gold);">Service
+                    Enquiries</h2>
+                <div id="enquiry-msg" class="manage-message"></div>
+                <div id="manage-enquiries-list" class="items-list-container"></div>
             </div>
         </section>
     </main>

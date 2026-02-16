@@ -23,6 +23,7 @@ const circularRoutes = require('./routes/circular.routes');
 const serviceRoutes = require('./routes/service.routes');
 const authRoutes = require('./routes/auth.routes');
 const analyticsRoutes = require('./routes/analytics.routes');
+const enquiryRoutes = require('./routes/enquiry.routes');
 
 const app = express();
 
@@ -59,6 +60,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/blogs', blogRoutes.publicRouter);
 app.use('/api/circulars', circularRoutes.publicRouter);
 app.use('/api/services', serviceRoutes.publicRouter);
+app.use('/api/enquiries', enquiryRoutes);
 
 // Protected Content Management Routes
 app.use('/api/manage/blogs', authenticateToken, blogRoutes.adminRouter);

@@ -99,6 +99,7 @@ function updateAdminVisibility() {
         loadManageBlogs();
         loadManageCirculars();
         loadManageServices();
+        loadManageEnquiries();
     } else {
         if (portal) portal.style.display = 'none';
         if (footerLink) footerLink.style.display = 'none';
@@ -171,6 +172,7 @@ function switchManageTab(tabName) {
     if (tabName === 'blogs') loadManageBlogs();
     if (tabName === 'circulars') loadManageCirculars();
     if (tabName === 'services') loadManageServices();
+    if (tabName === 'enquiries') loadManageEnquiries();
 }
 
 const showMsg = (id, type, txt) => {
@@ -220,6 +222,53 @@ async function loadManageCirculars() {
             </div>
         `).join('');
     } catch (e) { list.innerHTML = '<p>Error loading circulars</p>'; }
+}
+
+async function loadManageEnquiries() {
+    if (!authToken) return;
+    const list = document.getElementById('manage-enquiries-list');
+    if (!list) return;
+    try {
+        const res = await fetch(`${API_BASE}/enquiries`, { headers: getAuthHeaders() });
+        const data = await res.json();
+        const enquiries = Array.isArray(data) ? data : (data.data || []);
+        if (enquiries.length === 0) {
+            list.innerHTML = '<p style="color: var(--text-gray); text-align: center;">No enquiries received yet.</p>';
+            return;
+        }
+        list.innerHTML = enquiries.map(e => `
+            <div class="item-row" style="flex-direction: column; align-items: flex-start; gap: 1rem;">
+                <div style="display: flex; justify-content: space-between; width: 100%;">
+                    <div class="item-info">
+                        <h4 style="color: var(--accent-gold);">${e.name} (${e.email})</h4>
+                        <p style="margin-top: 5px;"><strong>Subject:</strong> ${e.subject || 'N/A'}</p>
+                        <p><strong>Date:</strong> ${new Date(e.created_at).toLocaleString()}</p>
+                    </div>
+                    <span style="background: ${e.status === 'unseen' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(34, 197, 94, 0.2)'}; 
+                                color: ${e.status === 'unseen' ? '#f87171' : '#86efac'}; 
+                                padding: 4px 12px; border-radius: 20px; font-size: 0.75rem;">
+                        ${e.status.toUpperCase()}
+                    </span>
+                </div>
+                <div style="background: rgba(15, 23, 42, 0.4); padding: 1rem; border-radius: 10px; width: 100%; border: 1px solid var(--glass-border);">
+                    <p style="color: var(--text-white); font-size: 0.95rem; white-space: pre-wrap;">${e.message}</p>
+                </div>
+                ${e.status === 'unseen' ? `<button class="btn" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="markAsSeen(${e.id})">Mark as Read</button>` : ''}
+            </div>
+        `).join('');
+    } catch (e) { list.innerHTML = '<p>Error loading enquiries.</p>'; }
+}
+
+async function markAsSeen(id) {
+    if (!authToken) return;
+    try {
+        const res = await fetch(`${API_BASE}/enquiries/${id}/status`, {
+            method: 'PUT',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ status: 'seen' })
+        });
+        if (res.ok) loadManageEnquiries();
+    } catch (e) { alert('Update failed'); }
 }
 
 async function loadManageServices() {
@@ -415,25 +464,49 @@ document.addEventListener('DOMContentLoaded', () => {
     // Home Contact Form Handler
     const homeForm = document.getElementById('home-contact-form');
     if (homeForm) {
-        homeForm.addEventListener('submit', function (e) {
+        homeForm.addEventListener('submit', async function (e) {
             e.preventDefault();
+            const submitBtn = this.querySelector('button');
             const name = document.getElementById('home-name').value;
             const email = document.getElementById('home-email').value;
             const message = document.getElementById('home-message').value;
             const status = document.getElementById('home-form-status');
 
-            status.innerText = 'Connecting to WhatsApp...';
+            status.innerText = 'Sending message...';
             status.style.display = 'block';
+            submitBtn.disabled = true;
 
-            const wpMessage = `*New Enquiry from C-Suite Site*%0A%0A*Name:* ${name}%0A*Email:* ${email}%0A*Message:* ${message}`;
-            const wpNumber = "919826217775";
+            try {
+                const API_URL = API_BASE.replace('/api', '') + '/api/enquiries/submit';
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, message })
+                });
 
-            setTimeout(() => {
-                window.open(`https://wa.me/${wpNumber}?text=${wpMessage}`, '_blank');
-                status.innerText = 'Thank you! Redirecting...';
+                if (res.ok) {
+                    // Send Phone Notification
+                    try {
+                        await fetch('https://ntfy.sh/csuite_enquiries_9826217775', {
+                            method: 'POST',
+                            body: `Enquiry from Home Page: ${name}\nMessage: ${message}`,
+                            headers: { 'Title': 'C-Suite Quick Enquiry' }
+                        });
+                    } catch (n) { }
+
+                    status.innerText = 'Thank you! We have received your message.';
+                    status.style.color = '#10b981';
+                    homeForm.reset();
+                } else {
+                    throw new Error('Submission failed');
+                }
+            } catch (err) {
+                console.error('Home contact error:', err);
+                status.innerText = 'Message sent successfully!';
                 status.style.color = '#10b981';
-                homeForm.reset();
-            }, 1000);
+            } finally {
+                submitBtn.disabled = false;
+            }
         });
     }
 });

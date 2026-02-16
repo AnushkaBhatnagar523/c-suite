@@ -88,6 +88,16 @@ async function init() {
             }
         };
 
+        await conn.query(`CREATE TABLE IF NOT EXISTS enquiries (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255),
+                email VARCHAR(255),
+                subject VARCHAR(255),
+                message TEXT,
+                status VARCHAR(50) DEFAULT 'unseen',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )`);
+
         conn.release();
         return true;
     } catch (err) {
