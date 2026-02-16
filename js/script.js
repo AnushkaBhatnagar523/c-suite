@@ -275,7 +275,10 @@ async function loadManageEnquiries() {
                 <div style="background: rgba(15, 23, 42, 0.4); padding: 1rem; border-radius: 10px; width: 100%; border: 1px solid var(--glass-border);">
                     <p style="color: var(--text-white); font-size: 0.95rem; white-space: pre-wrap;">${e.message}</p>
                 </div>
-                ${e.status === 'unseen' ? `<button class="btn" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="markAsSeen(${e.id})">Mark as Read</button>` : ''}
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    ${e.status === 'unseen' ? `<button class="btn" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="markAsSeen(${e.id})">Mark as Read</button>` : ''}
+                    <button class="btn-danger" style="padding: 0.5rem 1rem; font-size: 0.8rem; border-radius: 8px;" onclick="deleteItem('enquiries', ${e.id})">Delete</button>
+                </div>
             </div>
         `).join('');
     } catch (e) {
@@ -313,13 +316,15 @@ async function loadManageServices() {
 async function deleteItem(type, id) {
     if (!confirm(`Delete this ${type.slice(0, -1)}?`)) return;
     try {
-        const res = await fetch(`${API_BASE}/manage/${type}/${id}`, {
+        const url = type === 'enquiries' ? `${API_BASE}/enquiries/${id}` : `${API_BASE}/manage/${type}/${id}`;
+        const res = await fetch(url, {
             method: 'DELETE',
             headers: getAuthHeaders()
         });
         if (res.ok) {
             if (type === 'blogs') loadManageBlogs();
             if (type === 'circulars') loadManageCirculars();
+            if (type === 'enquiries') loadManageEnquiries();
             loadDynamicContent();
         }
     } catch (e) { alert('Delete failed'); }

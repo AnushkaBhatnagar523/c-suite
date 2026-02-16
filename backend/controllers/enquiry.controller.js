@@ -39,3 +39,11 @@ exports.updateStatus = (req, res) => {
         res.json({ message: 'Status updated' });
     });
 };
+
+exports.deleteEnquiry = (req, res) => {
+    const { id } = req.params;
+    db.run('DELETE FROM enquiries WHERE id = ?', [id], function (err) {
+        if (err) return res.status(500).json({ message: err.message });
+        res.json({ message: 'Enquiry deleted' });
+    });
+};
