@@ -1,107 +1,78 @@
-const { Pool } = require('pg');
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+const mariadb = require('mariadb');
+
+// Global fix for BigInt serialization (common with MariaDB)
+BigInt.prototype.toJSON = function () { return Number(this); };
 
 let activeDb = null;
 
-function getPgConfig() {
-    if (process.env.DATABASE_URL) {
-        return {
-            connectionString: process.env.DATABASE_URL,
-            ssl: {
-                rejectUnauthorized: false,
-                require: true
-            }
-        };
-    }
 
+function getMariaDBConfig() {
     return {
-        user: process.env.DB_USER,
-        host: process.env.DB_HOST,
-        database: process.env.DB_NAME,
-        password: process.env.DB_PASSWORD,
-        port: process.env.DB_PORT || 5432,
-        ssl: { rejectUnauthorized: false },
-        connectionTimeoutMillis: 30000
+        host: process.env.DB_HOST || '127.0.0.1',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_PASSWORD || '',
+        database: process.env.DB_NAME || 'csuite_db',
+        port: parseInt(process.env.DB_PORT) || 3306,
+        connectionLimit: 10
     };
 }
 
-// Helper: Convert SQLite '?' to PG '$n'
-function convertSql(sql) {
-    if (!sql) return sql;
-    let index = 1;
-    return sql.replace(/\?/g, () => `$${index++}`);
-}
+const pool = mariadb.createPool(getMariaDBConfig());
 
 function init() {
-    console.log('🔄 Initializing PostgreSQL Database...');
+    console.log('🔄 Initializing MariaDB Database...');
 
-    const config = getPgConfig();
-
-    // Log configuration status (safely)
-    if (process.env.DATABASE_URL) {
-        console.log('📡 Using DATABASE_URL connection');
-    } else {
-        console.log(`📡 Connecting to ${config.host}:${config.port} as ${config.user}`);
-    }
-
-    const pool = new Pool(config);
-
-    return pool.query('SELECT 1')
-        .then(function () {
-            console.log('✅ Connected to PostgreSQL');
+    return pool.getConnection()
+        .then(conn => {
+            console.log('✅ Connected to MariaDB');
 
             activeDb = {
-                type: 'pg',
-                all: (sql, params, cb) => pool.query(convertSql(sql), params, (err, res) => cb(err, res ? res.rows : null)),
-                get: (sql, params, cb) => pool.query(convertSql(sql), params, (err, res) => cb(err, res ? res.rows[0] : null)),
-                run: function (sql, params, cb) {
-                    let finalSql = convertSql(sql);
-                    if (finalSql.trim().toUpperCase().startsWith('INSERT INTO') && !finalSql.toUpperCase().includes('RETURNING')) {
-                        finalSql += ' RETURNING id';
-                    }
-                    pool.query(finalSql, params, (err, res) => {
-                        const ctx = {
-                            lastID: (res && res.rows[0]) ? res.rows[0].id : null,
-                            changes: res ? res.rowCount : 0
-                        };
-                        if (cb) cb.call(ctx, err);
-                    });
+                type: 'mariadb',
+                all: async (sql, params) => {
+                    const rows = await conn.query(sql.replace(/\?/g, '?'), params);
+                    return rows;
+                },
+                get: async (sql, params) => {
+                    const rows = await conn.query(sql.replace(/\?/g, '?'), params);
+                    return rows[0];
+                },
+                run: async (sql, params) => {
+                    const res = await conn.query(sql.replace(/\?/g, '?'), params);
+                    return {
+                        lastID: res.insertId,
+                        changes: res.affectedRows
+                    };
                 }
             };
 
-            // Init tables
-            const tables = [
-                `CREATE TABLE IF NOT EXISTS blogs (id SERIAL PRIMARY KEY, title TEXT NOT NULL, slug TEXT UNIQUE NOT NULL, content TEXT NOT NULL, image_url TEXT, category TEXT, author TEXT, status TEXT DEFAULT 'draft', created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP)`,
-                `CREATE TABLE IF NOT EXISTS circulars (id SERIAL PRIMARY KEY, title TEXT NOT NULL, authority TEXT, reference_no TEXT, summary TEXT, pdf_url TEXT, issued_date TEXT)`,
-                `CREATE TABLE IF NOT EXISTS services (id SERIAL PRIMARY KEY, service_name TEXT NOT NULL, slug TEXT UNIQUE NOT NULL, description TEXT, applicable_acts TEXT, sub_services TEXT, meta_title TEXT, meta_description TEXT)`,
-                `CREATE TABLE IF NOT EXISTS admin_users (id SERIAL PRIMARY KEY, username TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL, role TEXT DEFAULT 'admin')`,
-                `CREATE TABLE IF NOT EXISTS analytics (id SERIAL PRIMARY KEY, page TEXT NOT NULL, referrer TEXT, user_agent TEXT, ip_address TEXT, created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP)`
-            ];
-
-            let p = Promise.resolve();
-            tables.forEach(q => {
-                p = p.then(() => pool.query(q));
-            });
-            return p;
+            conn.release();
         })
-        .catch(function (err) {
-            console.error('❌ PostgreSQL Connection Failed!');
+        .catch(err => {
+            console.error('❌ MariaDB Connection Failed!');
             console.error('Error Details:', err.message || err);
-            if (err.code) console.error('Error Code:', err.code);
-            console.error('Environment check:');
-            console.error('- DATABASE_URL present:', !!process.env.DATABASE_URL);
-            console.error('- DB_HOST present:', !!process.env.DB_HOST);
-
             process.exit(1);
         });
 }
 
-// Immediate init call
 const initPromise = init();
 
-// Wrapper to ensure db is initialized before running query
+// Wrapper to bridge original callback-style DB calls to MariaDB's Promise-style calls
+// Helper to recursively convert BigInt to Number
+function convertBigInt(obj) {
+    if (obj === null || obj === undefined) return obj;
+    if (typeof obj === 'bigint') return Number(obj);
+    if (Array.isArray(obj)) return obj.map(convertBigInt);
+    if (typeof obj === 'object') {
+        const newObj = {};
+        for (const key in obj) {
+            newObj[key] = convertBigInt(obj[key]);
+        }
+        return newObj;
+    }
+    return obj;
+}
+
 const safeQuery = (method) => (sql, params, cb) => {
-    // Handle optional params
     let actualParams = params;
     let actualCb = cb;
     if (typeof params === 'function') {
@@ -109,13 +80,33 @@ const safeQuery = (method) => (sql, params, cb) => {
         actualParams = [];
     }
 
-    initPromise.then(() => {
-        if (!activeDb) return actualCb(new Error('Database not initialized'));
-        activeDb[method](sql, actualParams || [], actualCb);
+    initPromise.then(async () => {
+        if (!activeDb) return actualCb ? actualCb(new Error('Database not initialized')) : null;
+
+        try {
+            if (method === 'all') {
+                const rows = await pool.query(sql, actualParams);
+                if (actualCb) actualCb(null, convertBigInt(rows));
+            } else if (method === 'get') {
+                const rows = await pool.query(sql, actualParams);
+                if (actualCb) actualCb(null, convertBigInt(rows[0]));
+            } else if (method === 'run') {
+                let cleanSql = sql.replace(/RETURNING id/gi, '');
+                const res = await pool.query(cleanSql, actualParams);
+                const ctx = {
+                    lastID: typeof res.insertId === 'bigint' ? Number(res.insertId) : res.insertId,
+                    changes: typeof res.affectedRows === 'bigint' ? Number(res.affectedRows) : res.affectedRows
+                };
+                if (actualCb) actualCb.call(ctx, null);
+            }
+        } catch (err) {
+            if (actualCb) actualCb(err);
+        }
     }).catch(err => {
         if (actualCb) actualCb(err);
     });
 };
+
 
 module.exports = {
     all: safeQuery('all'),

@@ -9,7 +9,7 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: DATABASE_URL
+      - key: MARIADB_URL
         sync: false
       - key: JWT_SECRET
         sync: false
