@@ -116,14 +116,16 @@
         <section id="contact" style="padding: 100px 5%; background: var(--surface); text-align: center;">
             <h2 style="font-size: 3rem; margin-bottom: 2rem;">Get in Touch</h2>
             <p style="color: var(--text-gray); margin-bottom: 3rem;">Ready to optimize your global tax strategy?</p>
-            <form style="max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem;">
-                <input type="text" placeholder="Your Name"
+            <form id="home-contact-form"
+                style="max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem;">
+                <input type="text" id="home-name" placeholder="Your Name" required
                     style="padding: 1rem; border-radius: 10px; border: 1px solid var(--glass-border); background: var(--glass); color: white;">
-                <input type="email" placeholder="Email Address"
+                <input type="email" id="home-email" placeholder="Email Address" required
                     style="padding: 1rem; border-radius: 10px; border: 1px solid var(--glass-border); background: var(--glass); color: white;">
-                <textarea placeholder="How can we help?" rows="4"
+                <textarea id="home-message" placeholder="How can we help?" rows="4" required
                     style="padding: 1rem; border-radius: 10px; border: 1px solid var(--glass-border); background: var(--glass); color: white;"></textarea>
                 <button type="submit" class="btn" style="border: none; cursor: pointer;">Send Message</button>
+                <p id="home-form-status" style="margin-top: 1rem; color: var(--accent-gold); display: none;"></p>
             </form>
         </section>
 

@@ -411,6 +411,31 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (e) { showMsg('circular-msg', 'error', 'Error'); }
         });
     }
+
+    // Home Contact Form Handler
+    const homeForm = document.getElementById('home-contact-form');
+    if (homeForm) {
+        homeForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const name = document.getElementById('home-name').value;
+            const email = document.getElementById('home-email').value;
+            const message = document.getElementById('home-message').value;
+            const status = document.getElementById('home-form-status');
+
+            status.innerText = 'Connecting to WhatsApp...';
+            status.style.display = 'block';
+
+            const wpMessage = `*New Enquiry from C-Suite Site*%0A%0A*Name:* ${name}%0A*Email:* ${email}%0A*Message:* ${message}`;
+            const wpNumber = "919826217775";
+
+            setTimeout(() => {
+                window.open(`https://wa.me/${wpNumber}?text=${wpMessage}`, '_blank');
+                status.innerText = 'Thank you! Redirecting...';
+                status.style.color = '#10b981';
+                homeForm.reset();
+            }, 1000);
+        });
+    }
 });
 
 window.addEventListener('load', () => ScrollTrigger.refresh());

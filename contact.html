@@ -242,16 +242,26 @@
     <script>
         document.getElementById('contact-page-form').addEventListener('submit', function (e) {
             e.preventDefault();
+            const name = this.querySelector('input[type="text"]').value;
+            const email = this.querySelector('input[type="email"]').value;
+            const subject = this.querySelector('select').value;
+            const message = this.querySelector('textarea').value;
+
             const status = document.getElementById('form-status');
-            status.innerText = 'Sending message...';
+            status.innerText = 'Opening WhatsApp...';
             status.style.display = 'block';
             status.style.color = 'var(--accent-gold)';
 
+            // Format message for WhatsApp
+            const wpMessage = `*New Enquiry from C-Suite Site*%0A%0A*Name:* ${name}%0A*Email:* ${email}%0A*Subject:* ${subject}%0A*Message:* ${message}`;
+            const wpNumber = "919826217775"; // Your number with country code
+
             setTimeout(() => {
-                status.innerText = 'Thank you! Your enquiry has been sent successfully.';
+                window.open(`https://wa.me/${wpNumber}?text=${wpMessage}`, '_blank');
+                status.innerText = 'Thank you! Redirecting to WhatsApp...';
                 status.style.color = '#10b981';
                 this.reset();
-            }, 1500);
+            }, 1000);
         });
     </script>
 </body>
