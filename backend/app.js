@@ -60,7 +60,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/blogs', blogRoutes.publicRouter);
 app.use('/api/circulars', circularRoutes.publicRouter);
 app.use('/api/services', serviceRoutes.publicRouter);
-app.use('/api/enquiries', enquiryRoutes);
+app.use('/api/enquiries', (req, res, next) => {
+    console.log(`📞 Enquiry Route accessed: ${req.method} ${req.url}`);
+    next();
+}, enquiryRoutes);
 
 // Protected Content Management Routes
 app.use('/api/manage/blogs', authenticateToken, blogRoutes.adminRouter);

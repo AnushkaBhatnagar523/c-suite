@@ -248,13 +248,7 @@ async function loadManageEnquiries() {
                     <div class="item-info">
                         <h4 style="color: var(--accent-gold);">${e.name} (${e.email})</h4>
                         <p style="margin-top: 5px;"><strong>Subject:</strong> ${e.subject || 'N/A'}</p>
-                        <p><strong>Date:</strong> ${(() => {
-                if (!e.created_at) return 'N/A';
-                // Normalize SQL format (space) to ISO format (T) for better browser support
-                const dateStr = typeof e.created_at === 'string' ? e.created_at.replace(' ', 'T') : e.created_at;
-                const d = new Date(dateStr);
-                return isNaN(d.getTime()) ? 'Invalid Date Format' : d.toLocaleString();
-            })()}</p>
+                        <p><strong>Date:</strong> ${e.created_at ? new Date(e.created_at).toLocaleString() : 'N/A'}</p>
                     </div>
                     <span style="background: ${e.status === 'unseen' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(34, 197, 94, 0.2)'}; 
                                 color: ${e.status === 'unseen' ? '#f87171' : '#86efac'}; 
