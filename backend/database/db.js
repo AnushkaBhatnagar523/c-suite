@@ -1,18 +1,12 @@
 const { Pool } = require('pg');
-// Global fix for self-signed certificates in some environments
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 let activeDb = null;
 
-// PostgreSQL Configuration Helper
 function getPgConfig() {
     if (process.env.DATABASE_URL) {
         return {
             connectionString: process.env.DATABASE_URL,
-            ssl: {
-                rejectUnauthorized: false
-            },
-            connectionTimeoutMillis: 30000
+            ssl: { rejectUnauthorized: false }
         };
     }
 
