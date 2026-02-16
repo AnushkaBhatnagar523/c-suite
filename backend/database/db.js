@@ -1,4 +1,6 @@
 const { Pool } = require('pg');
+// Global fix for self-signed certificates in some environments
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 let activeDb = null;
 
