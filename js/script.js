@@ -230,6 +230,12 @@ async function loadManageEnquiries() {
     if (!list) return;
     try {
         const res = await fetch(`${API_BASE}/enquiries`, { headers: getAuthHeaders() });
+
+        if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.message || `Server responded with ${res.status}`);
+        }
+
         const data = await res.json();
         const enquiries = Array.isArray(data) ? data : (data.data || []);
         if (enquiries.length === 0) {
@@ -242,12 +248,18 @@ async function loadManageEnquiries() {
                     <div class="item-info">
                         <h4 style="color: var(--accent-gold);">${e.name} (${e.email})</h4>
                         <p style="margin-top: 5px;"><strong>Subject:</strong> ${e.subject || 'N/A'}</p>
-                        <p><strong>Date:</strong> ${new Date(e.created_at).toLocaleString()}</p>
+                        <p><strong>Date:</strong> ${(() => {
+                if (!e.created_at) return 'N/A';
+                // Normalize SQL format (space) to ISO format (T) for better browser support
+                const dateStr = typeof e.created_at === 'string' ? e.created_at.replace(' ', 'T') : e.created_at;
+                const d = new Date(dateStr);
+                return isNaN(d.getTime()) ? 'Invalid Date Format' : d.toLocaleString();
+            })()}</p>
                     </div>
                     <span style="background: ${e.status === 'unseen' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(34, 197, 94, 0.2)'}; 
                                 color: ${e.status === 'unseen' ? '#f87171' : '#86efac'}; 
                                 padding: 4px 12px; border-radius: 20px; font-size: 0.75rem;">
-                        ${e.status.toUpperCase()}
+                        ${(e.status || 'unseen').toUpperCase()}
                     </span>
                 </div>
                 <div style="background: rgba(15, 23, 42, 0.4); padding: 1rem; border-radius: 10px; width: 100%; border: 1px solid var(--glass-border);">
@@ -256,7 +268,10 @@ async function loadManageEnquiries() {
                 ${e.status === 'unseen' ? `<button class="btn" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="markAsSeen(${e.id})">Mark as Read</button>` : ''}
             </div>
         `).join('');
-    } catch (e) { list.innerHTML = '<p>Error loading enquiries.</p>'; }
+    } catch (e) {
+        console.error('Enquiries load error:', e);
+        list.innerHTML = `<p style="color: #f87171; text-align: center;">Error: ${e.message}</p>`;
+    }
 }
 
 async function markAsSeen(id) {
