@@ -20,7 +20,10 @@ exports.getCircularById = (req, res) => {
 
 // Admin: Create circular
 exports.createCircular = (req, res) => {
-    const { title, authority, reference_no, issued_date, summary, pdf_url } = req.body;
+    const { title, authority, reference_no, issued_date, summary } = req.body;
+    // Use uploaded file path if exists, otherwise use body value (if any)
+    const pdf_url = req.file ? `/uploads/${req.file.filename}` : (req.body.pdf_url || null);
+
     const sql = `INSERT INTO circulars (title, authority, reference_no, issued_date, summary, pdf_url) VALUES (?, ?, ?, ?, ?, ?)`;
     db.run(sql, [title, authority, reference_no, issued_date, summary, pdf_url], function (err) {
         if (err) return res.status(500).json({ message: err.message });

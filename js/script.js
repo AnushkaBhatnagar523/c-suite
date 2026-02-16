@@ -217,7 +217,11 @@ async function loadManageCirculars() {
         const circs = Array.isArray(data) ? data : (data.data || []);
         list.innerHTML = circs.map(c => `
             <div class="item-row">
-                <div class="item-info"><h4>${c.title}</h4><p>${c.authority || 'N/A'}</p></div>
+                <div class="item-info">
+                    <h4>${c.title}</h4>
+                    <p>${c.authority || 'N/A'} • ${c.reference_no || 'No Ref'}</p>
+                    ${c.pdf_url ? `<a href="${IMAGE_BASE}${c.pdf_url}" target="_blank" style="color: var(--accent-gold); font-size: 0.8rem;">View PDF</a>` : ''}
+                </div>
                 <button class="btn-danger" onclick="deleteItem('circulars', ${c.id})">Delete</button>
             </div>
         `).join('');
@@ -474,12 +478,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (circForm) {
         circForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const data = Object.fromEntries(new FormData(circForm));
+            const formData = new FormData(circForm);
             try {
                 const res = await fetch(`${API_BASE}/manage/circulars`, {
                     method: 'POST',
-                    headers: getAuthHeaders(),
-                    body: JSON.stringify(data)
+                    headers: { 'Authorization': `Bearer ${authToken}` },
+                    body: formData
                 });
                 if (res.ok) {
                     showMsg('circular-msg', 'success', 'Success!');
