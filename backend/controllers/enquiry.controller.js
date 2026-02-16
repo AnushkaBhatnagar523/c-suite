@@ -21,7 +21,11 @@ exports.submitEnquiry = (req, res) => {
 };
 
 exports.getAllEnquiries = (req, res) => {
-    db.all('SELECT * FROM enquiries ORDER BY created_at DESC', [], (err, rows) => {
+    // Force format as string in SQL to bypass BigInt converter issues
+    const sql = `SELECT id, name, email, subject, message, status, 
+                DATE_FORMAT(created_at, '%Y-%m-%dT%H:%i:%s.000Z') as created_at 
+                FROM enquiries ORDER BY created_at DESC`;
+    db.all(sql, [], (err, rows) => {
         if (err) return res.status(500).json({ message: err.message });
         res.json(rows);
     });
