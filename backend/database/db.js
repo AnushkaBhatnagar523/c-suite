@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 let activeDb = null;
 
@@ -6,7 +7,10 @@ function getPgConfig() {
     if (process.env.DATABASE_URL) {
         return {
             connectionString: process.env.DATABASE_URL,
-            ssl: { rejectUnauthorized: false }
+            ssl: {
+                rejectUnauthorized: false,
+                require: true
+            }
         };
     }
 
