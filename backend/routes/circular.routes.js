@@ -8,6 +8,7 @@ publicRouter.get('/', circularController.getAllCirculars);
 publicRouter.get('/:id', circularController.getCircularById);
 
 // Admin routes
+adminRouter.get('/', circularController.getAllCirculars);
 adminRouter.post('/', circularController.createCircular);
 adminRouter.delete('/:id', circularController.deleteCircular);
 
