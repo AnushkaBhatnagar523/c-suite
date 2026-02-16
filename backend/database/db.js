@@ -9,28 +9,32 @@ let activeDb = null;
 function getPool() {
     const connectionUri = process.env.MARIADB_URL || process.env.DATABASE_URL;
 
-    // If it's a cloud URI (MariaDB or MySQL)
     if (connectionUri && (connectionUri.startsWith('mariadb://') || connectionUri.startsWith('mysql://'))) {
         const isLocal = connectionUri.includes('127.0.0.1') || connectionUri.includes('localhost');
+        console.log(`📡 Using Connection URI (${isLocal ? 'Local' : 'Cloud'})`);
 
         if (isLocal) {
+            // Local URI is simpler, usually no SSL
             return mariadb.createPool(connectionUri);
         } else {
-            // For Cloud (Aiven), we might need to append SSL settings if not present
-            let finalUri = connectionUri;
-            if (!finalUri.includes('ssl-mode=')) {
-                finalUri += (finalUri.includes('?') ? '&' : '?') + 'ssl-mode=REQUIRED';
-            }
+            // For Cloud (Aiven), we need to ensure SSL is enabled if not in URI
+            console.log('🔒 Applying Cloud SSL settings...');
+
+            // If the URI is a string, mariadb.createPool(string) works, 
+            // but to add SSL object we need the options style
             return mariadb.createPool({
-                uri: finalUri,
-                ssl: { rejectUnauthorized: false },
+                uri: connectionUri,
+                ssl: {
+                    rejectUnauthorized: false // Often required for Aiven/Render
+                },
                 connectionLimit: 10,
-                connectTimeout: 10000
+                connectTimeout: 15000 // Increase to 15s for cloud
             });
         }
     }
 
-    // Fallback to manual config object
+    // Manual Object Setup
+    console.log('📂 Using Manual Config Object');
     return mariadb.createPool({
         host: process.env.DB_HOST || '127.0.0.1',
         user: process.env.DB_USER || 'root',
@@ -44,39 +48,43 @@ function getPool() {
 
 const pool = getPool();
 
-function init() {
+async function init() {
     console.log('🔄 Initializing MariaDB Database...');
 
-    return pool.getConnection()
-        .then(conn => {
-            console.log('✅ Connected to MariaDB');
+    try {
+        const conn = await pool.getConnection();
+        console.log('✅ Connected to MariaDB successfully');
 
-            activeDb = {
-                type: 'mariadb',
-                all: async (sql, params) => {
-                    const rows = await conn.query(sql.replace(/\?/g, '?'), params);
-                    return rows;
-                },
-                get: async (sql, params) => {
-                    const rows = await conn.query(sql.replace(/\?/g, '?'), params);
-                    return rows[0];
-                },
-                run: async (sql, params) => {
-                    const res = await conn.query(sql.replace(/\?/g, '?'), params);
-                    return {
-                        lastID: res.insertId,
-                        changes: res.affectedRows
-                    };
-                }
-            };
+        activeDb = {
+            type: 'mariadb',
+            all: async (sql, params) => {
+                return await conn.query(sql.replace(/\?/g, '?'), params);
+            },
+            get: async (sql, params) => {
+                const rows = await conn.query(sql.replace(/\?/g, '?'), params);
+                return rows[0];
+            },
+            run: async (sql, params) => {
+                const res = await conn.query(sql.replace(/\?/g, '?'), params);
+                return {
+                    lastID: res.insertId,
+                    changes: res.affectedRows
+                };
+            }
+        };
 
-            conn.release();
-        })
-        .catch(err => {
-            console.error('❌ MariaDB Connection Failed!');
-            console.error('Error Details:', err.message || err);
+        conn.release();
+        return true;
+    } catch (err) {
+        console.error('❌ MariaDB Connection Failed!');
+        console.error('Error Trace:', err);
+        // Don't exit immediately in development to allow debug, 
+        // but in production it helps Render show failure
+        if (process.env.NODE_ENV === 'production') {
             process.exit(1);
-        });
+        }
+        return false;
+    }
 }
 
 const initPromise = init();
