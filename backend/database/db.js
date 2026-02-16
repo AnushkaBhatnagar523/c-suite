@@ -6,31 +6,43 @@ BigInt.prototype.toJSON = function () { return Number(this); };
 let activeDb = null;
 
 
-function getMariaDBConfig() {
+function getPool() {
     const connectionUri = process.env.MARIADB_URL || process.env.DATABASE_URL;
 
+    // If it's a cloud URI (MariaDB or MySQL)
     if (connectionUri && (connectionUri.startsWith('mariadb://') || connectionUri.startsWith('mysql://'))) {
-        return {
-            uri: connectionUri,
-            connectionLimit: 10,
-            ssl: {
-                rejectUnauthorized: false // Required for some cloud providers like Aiven
+        const isLocal = connectionUri.includes('127.0.0.1') || connectionUri.includes('localhost');
+
+        if (isLocal) {
+            return mariadb.createPool(connectionUri);
+        } else {
+            // For Cloud (Aiven), we might need to append SSL settings if not present
+            let finalUri = connectionUri;
+            if (!finalUri.includes('ssl-mode=')) {
+                finalUri += (finalUri.includes('?') ? '&' : '?') + 'ssl-mode=REQUIRED';
             }
-        };
+            return mariadb.createPool({
+                uri: finalUri,
+                ssl: { rejectUnauthorized: false },
+                connectionLimit: 10,
+                connectTimeout: 10000
+            });
+        }
     }
 
-    return {
+    // Fallback to manual config object
+    return mariadb.createPool({
         host: process.env.DB_HOST || '127.0.0.1',
         user: process.env.DB_USER || 'root',
         password: process.env.DB_PASSWORD || '',
         database: process.env.DB_NAME || 'csuite_db',
         port: parseInt(process.env.DB_PORT) || 3306,
-        connectionLimit: 10
-    };
+        connectionLimit: 10,
+        connectTimeout: 10000
+    });
 }
 
-const poolConfig = getMariaDBConfig();
-const pool = mariadb.createPool(poolConfig);
+const pool = getPool();
 
 function init() {
     console.log('🔄 Initializing MariaDB Database...');
