@@ -248,7 +248,23 @@ async function loadManageEnquiries() {
                     <div class="item-info">
                         <h4 style="color: var(--accent-gold);">${e.name} (${e.email})</h4>
                         <p style="margin-top: 5px;"><strong>Subject:</strong> ${e.subject || 'N/A'}</p>
-                        <p><strong>Date:</strong> ${e.created_at ? new Date(e.created_at).toLocaleString() : 'N/A'}</p>
+                        <p><strong>Date:</strong> ${(() => {
+                if (!e.created_at) return 'N/A';
+                try {
+                    // Try standard parsing first
+                    const d = new Date(e.created_at);
+                    if (!isNaN(d.getTime())) return d.toLocaleString();
+
+                    // Manual fix for "YYYY-MM-DD HH:MM:SS" which some browsers hate
+                    const normalized = String(e.created_at).replace(' ', 'T');
+                    const d2 = new Date(normalized);
+                    if (!isNaN(d2.getTime())) return d2.toLocaleString();
+
+                    return String(e.created_at); // Final fallback: raw database string
+                } catch (err) {
+                    return String(e.created_at);
+                }
+            })()}</p>
                     </div>
                     <span style="background: ${e.status === 'unseen' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(34, 197, 94, 0.2)'}; 
                                 color: ${e.status === 'unseen' ? '#f87171' : '#86efac'}; 

@@ -21,11 +21,7 @@ exports.submitEnquiry = (req, res) => {
 };
 
 exports.getAllEnquiries = (req, res) => {
-    // Format the date in SQL so the frontend doesn't have to parse it
-    const sql = `SELECT id, name, email, subject, message, status, 
-                DATE_FORMAT(created_at, '%Y-%m-%dT%H:%i:%sZ') as created_at 
-                FROM enquiries ORDER BY created_at DESC`;
-    db.all(sql, [], (err, rows) => {
+    db.all('SELECT * FROM enquiries ORDER BY created_at DESC', [], (err, rows) => {
         if (err) return res.status(500).json({ message: err.message });
         res.json(rows);
     });
