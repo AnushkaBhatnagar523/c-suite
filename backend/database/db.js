@@ -7,6 +7,18 @@ let activeDb = null;
 
 
 function getMariaDBConfig() {
+    const connectionUri = process.env.MARIADB_URL || process.env.DATABASE_URL;
+
+    if (connectionUri && (connectionUri.startsWith('mariadb://') || connectionUri.startsWith('mysql://'))) {
+        return {
+            uri: connectionUri,
+            connectionLimit: 10,
+            ssl: {
+                rejectUnauthorized: false // Required for some cloud providers like Aiven
+            }
+        };
+    }
+
     return {
         host: process.env.DB_HOST || '127.0.0.1',
         user: process.env.DB_USER || 'root',
@@ -17,7 +29,8 @@ function getMariaDBConfig() {
     };
 }
 
-const pool = mariadb.createPool(getMariaDBConfig());
+const poolConfig = getMariaDBConfig();
+const pool = mariadb.createPool(poolConfig);
 
 function init() {
     console.log('🔄 Initializing MariaDB Database...');
