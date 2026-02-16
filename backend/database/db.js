@@ -17,19 +17,34 @@ function getPool() {
             // Local URI is simpler, usually no SSL
             return mariadb.createPool(connectionUri);
         } else {
-            // For Cloud (Aiven), we need to ensure SSL is enabled if not in URI
             console.log('🔒 Applying Cloud SSL settings...');
 
-            // If the URI is a string, mariadb.createPool(string) works, 
-            // but to add SSL object we need the options style
-            return mariadb.createPool({
-                uri: connectionUri,
-                ssl: {
-                    rejectUnauthorized: false // Often required for Aiven/Render
-                },
-                connectionLimit: 10,
-                connectTimeout: 15000 // Increase to 15s for cloud
-            });
+            try {
+                // Manually parse URI components for robust object-mode connection
+                const url = new URL(connectionUri);
+                const config = {
+                    host: url.hostname,
+                    port: parseInt(url.port) || 3306,
+                    user: url.username,
+                    password: decodeURIComponent(url.password),
+                    database: url.pathname.startsWith('/') ? url.pathname.slice(1) : url.pathname,
+                    ssl: {
+                        rejectUnauthorized: false
+                    },
+                    connectionLimit: 10,
+                    connectTimeout: 15000
+                };
+
+                // Remove empty fields to avoid confusing the driver
+                if (!config.user) delete config.user;
+                if (!config.password) delete config.password;
+                if (!config.database) delete config.database;
+
+                return mariadb.createPool(config);
+            } catch (err) {
+                console.error('⚠️ URI parsing failed, attempting direct string connection...');
+                return mariadb.createPool(connectionUri);
+            }
         }
     }
 
