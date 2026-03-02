@@ -26,6 +26,37 @@ function getAuthHeaders() {
     };
 }
 
+// Mobile Menu Toggle
+function initMobileMenu() {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const nav = document.querySelector('nav');
+    if (menuToggle && nav) {
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            nav.classList.toggle('active');
+        });
+
+        // Handle links in nav
+        nav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const isDropdownParent = link.parentElement.classList.contains('nav-dropdown');
+
+                if (window.innerWidth < 768 && isDropdownParent) {
+                    // On mobile, toggle the dropdown instead of closing menu
+                    e.preventDefault();
+                    link.parentElement.classList.toggle('mobile-open');
+                } else {
+                    // Regular link: close menu
+                    menuToggle.classList.remove('active');
+                    nav.classList.remove('active');
+                    // Reset any open dropdowns
+                    nav.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('mobile-open'));
+                }
+            });
+        });
+    }
+}
+
 // Navbar Scroll Effect
 window.addEventListener('scroll', () => {
     const header = document.querySelector('header');
@@ -403,6 +434,7 @@ async function loadDynamicContent() {
 
 // Main Initialization
 document.addEventListener('DOMContentLoaded', () => {
+    initMobileMenu();
     initAnimations();
     loadDynamicContent();
     updateAdminVisibility();
